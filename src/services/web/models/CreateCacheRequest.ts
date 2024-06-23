@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -30,10 +30,8 @@ export interface CreateCacheRequest {
 /**
  * Check if a given object implements the CreateCacheRequest interface.
  */
-export function instanceOfCreateCacheRequest(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfCreateCacheRequest(value: object): value is CreateCacheRequest {
+  return true;
 }
 
 export function CreateCacheRequestFromJSON(json: any): CreateCacheRequest {
@@ -44,22 +42,19 @@ export function CreateCacheRequestFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): CreateCacheRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    content: !exists(json, 'content') ? undefined : json['content'],
+    content: json['content'] == null ? undefined : json['content'],
   };
 }
 
 export function CreateCacheRequestToJSON(value?: CreateCacheRequest | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    content: value.content,
+    content: value['content'],
   };
 }

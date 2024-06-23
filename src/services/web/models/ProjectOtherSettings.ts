@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { ProjectOtherSettingsLabelMappingInner } from './ProjectOtherSettingsLabelMappingInner';
 import {
   ProjectOtherSettingsLabelMappingInnerFromJSON,
@@ -105,10 +105,8 @@ export interface ProjectOtherSettings {
 /**
  * Check if a given object implements the ProjectOtherSettings interface.
  */
-export function instanceOfProjectOtherSettings(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfProjectOtherSettings(value: object): value is ProjectOtherSettings {
+  return true;
 }
 
 export function ProjectOtherSettingsFromJSON(json: any): ProjectOtherSettings {
@@ -119,52 +117,51 @@ export function ProjectOtherSettingsFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): ProjectOtherSettings {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    mlBackendUrl: !exists(json, 'mlBackendUrl') ? undefined : json['mlBackendUrl'],
-    perviousModel: !exists(json, 'perviousModel') ? undefined : json['perviousModel'],
-    models: !exists(json, 'models') ? undefined : json['models'],
-    modelName: !exists(json, 'modelName') ? undefined : json['modelName'],
-    labelMapping: !exists(json, 'labelMapping')
-      ? undefined
-      : (json['labelMapping'] as Array<any>).map(ProjectOtherSettingsLabelMappingInnerFromJSON),
-    modelSettings: !exists(json, 'modelSettings')
-      ? undefined
-      : mapValues(json['modelSettings'], ProjectOtherSettingsModelSettingsValueFromJSON),
-    modelFilePath: !exists(json, 'modelFilePath') ? undefined : json['modelFilePath'],
-    paramFilePath: !exists(json, 'paramFilePath') ? undefined : json['paramFilePath'],
-    lang: !exists(json, 'lang') ? undefined : json['lang'],
-    isSample: !exists(json, 'isSample') ? undefined : json['isSample'],
-    clasSubCatg: !exists(json, 'clasSubCatg') ? undefined : json['clasSubCatg'],
+    mlBackendUrl: json['mlBackendUrl'] == null ? undefined : json['mlBackendUrl'],
+    perviousModel: json['perviousModel'] == null ? undefined : json['perviousModel'],
+    models: json['models'] == null ? undefined : json['models'],
+    modelName: json['modelName'] == null ? undefined : json['modelName'],
+    labelMapping:
+      json['labelMapping'] == null
+        ? undefined
+        : (json['labelMapping'] as Array<any>).map(ProjectOtherSettingsLabelMappingInnerFromJSON),
+    modelSettings:
+      json['modelSettings'] == null
+        ? undefined
+        : mapValues(json['modelSettings'], ProjectOtherSettingsModelSettingsValueFromJSON),
+    modelFilePath: json['modelFilePath'] == null ? undefined : json['modelFilePath'],
+    paramFilePath: json['paramFilePath'] == null ? undefined : json['paramFilePath'],
+    lang: json['lang'] == null ? undefined : json['lang'],
+    isSample: json['isSample'] == null ? undefined : json['isSample'],
+    clasSubCatg: json['clasSubCatg'] == null ? undefined : json['clasSubCatg'],
   };
 }
 
 export function ProjectOtherSettingsToJSON(value?: ProjectOtherSettings | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    mlBackendUrl: value.mlBackendUrl,
-    perviousModel: value.perviousModel,
-    models: value.models,
-    modelName: value.modelName,
+    mlBackendUrl: value['mlBackendUrl'],
+    perviousModel: value['perviousModel'],
+    models: value['models'],
+    modelName: value['modelName'],
     labelMapping:
-      value.labelMapping === undefined
+      value['labelMapping'] == null
         ? undefined
-        : (value.labelMapping as Array<any>).map(ProjectOtherSettingsLabelMappingInnerToJSON),
+        : (value['labelMapping'] as Array<any>).map(ProjectOtherSettingsLabelMappingInnerToJSON),
     modelSettings:
-      value.modelSettings === undefined
+      value['modelSettings'] == null
         ? undefined
-        : mapValues(value.modelSettings, ProjectOtherSettingsModelSettingsValueToJSON),
-    modelFilePath: value.modelFilePath,
-    paramFilePath: value.paramFilePath,
-    lang: value.lang,
-    isSample: value.isSample,
-    clasSubCatg: value.clasSubCatg,
+        : mapValues(value['modelSettings'], ProjectOtherSettingsModelSettingsValueToJSON),
+    modelFilePath: value['modelFilePath'],
+    paramFilePath: value['paramFilePath'],
+    lang: value['lang'],
+    isSample: value['isSample'],
+    clasSubCatg: value['clasSubCatg'],
   };
 }

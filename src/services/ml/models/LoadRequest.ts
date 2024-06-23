@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -30,10 +30,8 @@ export interface LoadRequest {
 /**
  * Check if a given object implements the LoadRequest interface.
  */
-export function instanceOfLoadRequest(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfLoadRequest(value: object): value is LoadRequest {
+  return true;
 }
 
 export function LoadRequestFromJSON(json: any): LoadRequest {
@@ -41,22 +39,19 @@ export function LoadRequestFromJSON(json: any): LoadRequest {
 }
 
 export function LoadRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): LoadRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    initParams: !exists(json, 'init_params') ? undefined : json['init_params'],
+    initParams: json['init_params'] == null ? undefined : json['init_params'],
   };
 }
 
 export function LoadRequestToJSON(value?: LoadRequest | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    init_params: value.initParams,
+    init_params: value['initParams'],
   };
 }

@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -42,10 +42,8 @@ export interface SplitDatasetRequest {
 /**
  * Check if a given object implements the SplitDatasetRequest interface.
  */
-export function instanceOfSplitDatasetRequest(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfSplitDatasetRequest(value: object): value is SplitDatasetRequest {
+  return true;
 }
 
 export function SplitDatasetRequestFromJSON(json: any): SplitDatasetRequest {
@@ -56,26 +54,23 @@ export function SplitDatasetRequestFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): SplitDatasetRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    train: !exists(json, 'train') ? undefined : json['train'],
-    val: !exists(json, 'val') ? undefined : json['val'],
-    test: !exists(json, 'test') ? undefined : json['test'],
+    train: json['train'] == null ? undefined : json['train'],
+    val: json['val'] == null ? undefined : json['val'],
+    test: json['test'] == null ? undefined : json['test'],
   };
 }
 
 export function SplitDatasetRequestToJSON(value?: SplitDatasetRequest | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    train: value.train,
-    val: value.val,
-    test: value.test,
+    train: value['train'],
+    val: value['val'],
+    test: value['test'],
   };
 }

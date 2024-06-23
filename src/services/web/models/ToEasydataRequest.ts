@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -36,12 +36,10 @@ export interface ToEasydataRequest {
 /**
  * Check if a given object implements the ToEasydataRequest interface.
  */
-export function instanceOfToEasydataRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'accessToken' in value;
-  isInstance = isInstance && 'datasetId' in value;
-
-  return isInstance;
+export function instanceOfToEasydataRequest(value: object): value is ToEasydataRequest {
+  if (!('accessToken' in value) || value['accessToken'] === undefined) return false;
+  if (!('datasetId' in value) || value['datasetId'] === undefined) return false;
+  return true;
 }
 
 export function ToEasydataRequestFromJSON(json: any): ToEasydataRequest {
@@ -52,7 +50,7 @@ export function ToEasydataRequestFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): ToEasydataRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -62,14 +60,11 @@ export function ToEasydataRequestFromJSONTyped(
 }
 
 export function ToEasydataRequestToJSON(value?: ToEasydataRequest | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    access_token: value.accessToken,
-    dataset_id: value.datasetId,
+    access_token: value['accessToken'],
+    dataset_id: value['datasetId'],
   };
 }

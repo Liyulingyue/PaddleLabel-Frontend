@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -72,11 +72,9 @@ export interface Label {
 /**
  * Check if a given object implements the Label interface.
  */
-export function instanceOfLabel(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'name' in value;
-
-  return isInstance;
+export function instanceOfLabel(value: object): value is Label {
+  if (!('name' in value) || value['name'] === undefined) return false;
+  return true;
 }
 
 export function LabelFromJSON(json: any): Label {
@@ -84,34 +82,31 @@ export function LabelFromJSON(json: any): Label {
 }
 
 export function LabelFromJSONTyped(json: any, ignoreDiscriminator: boolean): Label {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    labelId: !exists(json, 'label_id') ? undefined : json['label_id'],
-    projectId: !exists(json, 'project_id') ? undefined : json['project_id'],
+    labelId: json['label_id'] == null ? undefined : json['label_id'],
+    projectId: json['project_id'] == null ? undefined : json['project_id'],
     name: json['name'],
-    color: !exists(json, 'color') ? undefined : json['color'],
-    comment: !exists(json, 'comment') ? undefined : json['comment'],
-    created: !exists(json, 'created') ? undefined : json['created'],
-    modified: !exists(json, 'modified') ? undefined : json['modified'],
-    superCategoryId: !exists(json, 'super_category_id') ? undefined : json['super_category_id'],
+    color: json['color'] == null ? undefined : json['color'],
+    comment: json['comment'] == null ? undefined : json['comment'],
+    created: json['created'] == null ? undefined : json['created'],
+    modified: json['modified'] == null ? undefined : json['modified'],
+    superCategoryId: json['super_category_id'] == null ? undefined : json['super_category_id'],
   };
 }
 
-export function LabelToJSON(value?: Label | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+export function LabelToJSON(value?: Omit<Label, 'created' | 'modified'> | null): any {
+  if (value == null) {
+    return value;
   }
   return {
-    label_id: value.labelId,
-    project_id: value.projectId,
-    name: value.name,
-    color: value.color,
-    comment: value.comment,
-    super_category_id: value.superCategoryId,
+    label_id: value['labelId'],
+    project_id: value['projectId'],
+    name: value['name'],
+    color: value['color'],
+    comment: value['comment'],
+    super_category_id: value['superCategoryId'],
   };
 }

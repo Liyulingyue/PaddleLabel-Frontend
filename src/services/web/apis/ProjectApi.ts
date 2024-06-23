@@ -27,7 +27,7 @@ import type {
   Tag,
   Task,
   ToEasydataRequest,
-} from '../models';
+} from '../models/index';
 import {
   AnnotationFromJSON,
   AnnotationToJSON,
@@ -55,10 +55,10 @@ import {
   TaskToJSON,
   ToEasydataRequestFromJSON,
   ToEasydataRequestToJSON,
-} from '../models';
+} from '../models/index';
 
 export interface CreateRequest {
-  project: Project;
+  project: Omit<Project, 'project_id' | 'created' | 'modified'>;
   requestId?: number;
 }
 
@@ -145,7 +145,7 @@ export interface ToEasydataOperationRequest {
 
 export interface UpdateRequest {
   projectId: number;
-  project: Project;
+  project: Omit<Project, 'project_id' | 'created' | 'modified'>;
   requestId?: number;
 }
 
@@ -161,10 +161,10 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: CreateRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Project>> {
-    if (requestParameters.project === null || requestParameters.project === undefined) {
+    if (requestParameters['project'] == null) {
       throw new runtime.RequiredError(
         'project',
-        'Required parameter requestParameters.project was null or undefined when calling create.',
+        'Required parameter "project" was null or undefined when calling create().',
       );
     }
 
@@ -174,8 +174,8 @@ export class ProjectApi extends runtime.BaseAPI {
 
     headerParameters['Content-Type'] = 'application/json';
 
-    if (requestParameters.requestId !== undefined && requestParameters.requestId !== null) {
-      headerParameters['request_id'] = String(requestParameters.requestId);
+    if (requestParameters['requestId'] != null) {
+      headerParameters['request_id'] = String(requestParameters['requestId']);
     }
 
     const response = await this.request(
@@ -184,7 +184,7 @@ export class ProjectApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: ProjectToJSON(requestParameters.project),
+        body: ProjectToJSON(requestParameters['project']),
       },
       initOverrides,
     );
@@ -216,10 +216,10 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: ExportDatasetOperationRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+    if (requestParameters['projectId'] == null) {
       throw new runtime.RequiredError(
         'projectId',
-        'Required parameter requestParameters.projectId was null or undefined when calling exportDataset.',
+        'Required parameter "projectId" was null or undefined when calling exportDataset().',
       );
     }
 
@@ -233,12 +233,12 @@ export class ProjectApi extends runtime.BaseAPI {
       {
         path: `/projects/{project_id}/export`.replace(
           `{${'project_id'}}`,
-          encodeURIComponent(String(requestParameters.projectId)),
+          encodeURIComponent(String(requestParameters['projectId'])),
         ),
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: ExportDatasetRequestToJSON(requestParameters.exportDatasetRequest),
+        body: ExportDatasetRequestToJSON(requestParameters['exportDatasetRequest']),
       },
       initOverrides,
     );
@@ -269,10 +269,10 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: GetRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Project>> {
-    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+    if (requestParameters['projectId'] == null) {
       throw new runtime.RequiredError(
         'projectId',
-        'Required parameter requestParameters.projectId was null or undefined when calling get.',
+        'Required parameter "projectId" was null or undefined when calling get().',
       );
     }
 
@@ -280,15 +280,15 @@ export class ProjectApi extends runtime.BaseAPI {
 
     const headerParameters: runtime.HTTPHeaders = {};
 
-    if (requestParameters.requestId !== undefined && requestParameters.requestId !== null) {
-      headerParameters['request_id'] = String(requestParameters.requestId);
+    if (requestParameters['requestId'] != null) {
+      headerParameters['request_id'] = String(requestParameters['requestId']);
     }
 
     const response = await this.request(
       {
         path: `/projects/{project_id}`.replace(
           `{${'project_id'}}`,
-          encodeURIComponent(String(requestParameters.projectId)),
+          encodeURIComponent(String(requestParameters['projectId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -325,14 +325,14 @@ export class ProjectApi extends runtime.BaseAPI {
   ): Promise<runtime.ApiResponse<Array<Project>>> {
     const queryParameters: any = {};
 
-    if (requestParameters.orderBy !== undefined) {
-      queryParameters['order_by'] = requestParameters.orderBy;
+    if (requestParameters['orderBy'] != null) {
+      queryParameters['order_by'] = requestParameters['orderBy'];
     }
 
     const headerParameters: runtime.HTTPHeaders = {};
 
-    if (requestParameters.requestId !== undefined && requestParameters.requestId !== null) {
-      headerParameters['request_id'] = String(requestParameters.requestId);
+    if (requestParameters['requestId'] != null) {
+      headerParameters['request_id'] = String(requestParameters['requestId']);
     }
 
     const response = await this.request(
@@ -371,10 +371,10 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: GetAnnotationsRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Array<Annotation>>> {
-    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+    if (requestParameters['projectId'] == null) {
       throw new runtime.RequiredError(
         'projectId',
-        'Required parameter requestParameters.projectId was null or undefined when calling getAnnotations.',
+        'Required parameter "projectId" was null or undefined when calling getAnnotations().',
       );
     }
 
@@ -386,7 +386,7 @@ export class ProjectApi extends runtime.BaseAPI {
       {
         path: `/projects/{project_id}/annotations`.replace(
           `{${'project_id'}}`,
-          encodeURIComponent(String(requestParameters.projectId)),
+          encodeURIComponent(String(requestParameters['projectId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -418,10 +418,10 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: GetLabelsRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Array<Label>>> {
-    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+    if (requestParameters['projectId'] == null) {
       throw new runtime.RequiredError(
         'projectId',
-        'Required parameter requestParameters.projectId was null or undefined when calling getLabels.',
+        'Required parameter "projectId" was null or undefined when calling getLabels().',
       );
     }
 
@@ -433,7 +433,7 @@ export class ProjectApi extends runtime.BaseAPI {
       {
         path: `/projects/{project_id}/labels`.replace(
           `{${'project_id'}}`,
-          encodeURIComponent(String(requestParameters.projectId)),
+          encodeURIComponent(String(requestParameters['projectId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -464,17 +464,17 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: GetOptionsRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Array<ImportOption>>> {
-    if (requestParameters.projectType === null || requestParameters.projectType === undefined) {
+    if (requestParameters['projectType'] == null) {
       throw new runtime.RequiredError(
         'projectType',
-        'Required parameter requestParameters.projectType was null or undefined when calling getOptions.',
+        'Required parameter "projectType" was null or undefined when calling getOptions().',
       );
     }
 
-    if (requestParameters.imOrExport === null || requestParameters.imOrExport === undefined) {
+    if (requestParameters['imOrExport'] == null) {
       throw new runtime.RequiredError(
         'imOrExport',
-        'Required parameter requestParameters.imOrExport was null or undefined when calling getOptions.',
+        'Required parameter "imOrExport" was null or undefined when calling getOptions().',
       );
     }
 
@@ -482,15 +482,21 @@ export class ProjectApi extends runtime.BaseAPI {
 
     const headerParameters: runtime.HTTPHeaders = {};
 
-    if (requestParameters.requestId !== undefined && requestParameters.requestId !== null) {
-      headerParameters['request_id'] = String(requestParameters.requestId);
+    if (requestParameters['requestId'] != null) {
+      headerParameters['request_id'] = String(requestParameters['requestId']);
     }
 
     const response = await this.request(
       {
         path: `/projects/options/{im_or_export}/{project_type}`
-          .replace(`{${'project_type'}}`, encodeURIComponent(String(requestParameters.projectType)))
-          .replace(`{${'im_or_export'}}`, encodeURIComponent(String(requestParameters.imOrExport))),
+          .replace(
+            `{${'project_type'}}`,
+            encodeURIComponent(String(requestParameters['projectType'])),
+          )
+          .replace(
+            `{${'im_or_export'}}`,
+            encodeURIComponent(String(requestParameters['imOrExport'])),
+          ),
         method: 'GET',
         headers: headerParameters,
         query: queryParameters,
@@ -527,10 +533,10 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: GetProgressRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<GetProgress200Response>> {
-    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+    if (requestParameters['projectId'] == null) {
       throw new runtime.RequiredError(
         'projectId',
-        'Required parameter requestParameters.projectId was null or undefined when calling getProgress.',
+        'Required parameter "projectId" was null or undefined when calling getProgress().',
       );
     }
 
@@ -542,7 +548,7 @@ export class ProjectApi extends runtime.BaseAPI {
       {
         path: `/projects/{project_id}/progress`.replace(
           `{${'project_id'}}`,
-          encodeURIComponent(String(requestParameters.projectId)),
+          encodeURIComponent(String(requestParameters['projectId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -576,10 +582,10 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: GetTagsRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Array<Tag>>> {
-    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+    if (requestParameters['projectId'] == null) {
       throw new runtime.RequiredError(
         'projectId',
-        'Required parameter requestParameters.projectId was null or undefined when calling getTags.',
+        'Required parameter "projectId" was null or undefined when calling getTags().',
       );
     }
 
@@ -591,7 +597,7 @@ export class ProjectApi extends runtime.BaseAPI {
       {
         path: `/projects/{project_id}/tags`.replace(
           `{${'project_id'}}`,
-          encodeURIComponent(String(requestParameters.projectId)),
+          encodeURIComponent(String(requestParameters['projectId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -623,17 +629,17 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: GetTasksRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Array<Task>>> {
-    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+    if (requestParameters['projectId'] == null) {
       throw new runtime.RequiredError(
         'projectId',
-        'Required parameter requestParameters.projectId was null or undefined when calling getTasks.',
+        'Required parameter "projectId" was null or undefined when calling getTasks().',
       );
     }
 
     const queryParameters: any = {};
 
-    if (requestParameters.orderBy !== undefined) {
-      queryParameters['order_by'] = requestParameters.orderBy;
+    if (requestParameters['orderBy'] != null) {
+      queryParameters['order_by'] = requestParameters['orderBy'];
     }
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -642,7 +648,7 @@ export class ProjectApi extends runtime.BaseAPI {
       {
         path: `/projects/{project_id}/tasks`.replace(
           `{${'project_id'}}`,
-          encodeURIComponent(String(requestParameters.projectId)),
+          encodeURIComponent(String(requestParameters['projectId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -677,10 +683,10 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: ImportDatasetOperationRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+    if (requestParameters['projectId'] == null) {
       throw new runtime.RequiredError(
         'projectId',
-        'Required parameter requestParameters.projectId was null or undefined when calling importDataset.',
+        'Required parameter "projectId" was null or undefined when calling importDataset().',
       );
     }
 
@@ -694,12 +700,12 @@ export class ProjectApi extends runtime.BaseAPI {
       {
         path: `/projects/{project_id}/import`.replace(
           `{${'project_id'}}`,
-          encodeURIComponent(String(requestParameters.projectId)),
+          encodeURIComponent(String(requestParameters['projectId'])),
         ),
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: ImportDatasetRequestToJSON(requestParameters.importDatasetRequest),
+        body: ImportDatasetRequestToJSON(requestParameters['importDatasetRequest']),
       },
       initOverrides,
     );
@@ -729,10 +735,10 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: PredictOperationRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+    if (requestParameters['projectId'] == null) {
       throw new runtime.RequiredError(
         'projectId',
-        'Required parameter requestParameters.projectId was null or undefined when calling predict.',
+        'Required parameter "projectId" was null or undefined when calling predict().',
       );
     }
 
@@ -746,12 +752,12 @@ export class ProjectApi extends runtime.BaseAPI {
       {
         path: `/projects/{project_id}/predict`.replace(
           `{${'project_id'}}`,
-          encodeURIComponent(String(requestParameters.projectId)),
+          encodeURIComponent(String(requestParameters['projectId'])),
         ),
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: PredictRequestToJSON(requestParameters.predictRequest),
+        body: PredictRequestToJSON(requestParameters['predictRequest']),
       },
       initOverrides,
     );
@@ -779,10 +785,10 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: RemoveRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+    if (requestParameters['projectId'] == null) {
       throw new runtime.RequiredError(
         'projectId',
-        'Required parameter requestParameters.projectId was null or undefined when calling remove.',
+        'Required parameter "projectId" was null or undefined when calling remove().',
       );
     }
 
@@ -790,15 +796,15 @@ export class ProjectApi extends runtime.BaseAPI {
 
     const headerParameters: runtime.HTTPHeaders = {};
 
-    if (requestParameters.requestId !== undefined && requestParameters.requestId !== null) {
-      headerParameters['request_id'] = String(requestParameters.requestId);
+    if (requestParameters['requestId'] != null) {
+      headerParameters['request_id'] = String(requestParameters['requestId']);
     }
 
     const response = await this.request(
       {
         path: `/projects/{project_id}`.replace(
           `{${'project_id'}}`,
-          encodeURIComponent(String(requestParameters.projectId)),
+          encodeURIComponent(String(requestParameters['projectId'])),
         ),
         method: 'DELETE',
         headers: headerParameters,
@@ -830,10 +836,10 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: RemoveLabelsRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+    if (requestParameters['projectId'] == null) {
       throw new runtime.RequiredError(
         'projectId',
-        'Required parameter requestParameters.projectId was null or undefined when calling removeLabels.',
+        'Required parameter "projectId" was null or undefined when calling removeLabels().',
       );
     }
 
@@ -845,7 +851,7 @@ export class ProjectApi extends runtime.BaseAPI {
       {
         path: `/projects/{project_id}/labels`.replace(
           `{${'project_id'}}`,
-          encodeURIComponent(String(requestParameters.projectId)),
+          encodeURIComponent(String(requestParameters['projectId'])),
         ),
         method: 'DELETE',
         headers: headerParameters,
@@ -875,10 +881,10 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: SetAllOperationRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+    if (requestParameters['projectId'] == null) {
       throw new runtime.RequiredError(
         'projectId',
-        'Required parameter requestParameters.projectId was null or undefined when calling setAll.',
+        'Required parameter "projectId" was null or undefined when calling setAll().',
       );
     }
 
@@ -892,12 +898,12 @@ export class ProjectApi extends runtime.BaseAPI {
       {
         path: `/projects/{project_id}/tasks`.replace(
           `{${'project_id'}}`,
-          encodeURIComponent(String(requestParameters.projectId)),
+          encodeURIComponent(String(requestParameters['projectId'])),
         ),
         method: 'PUT',
         headers: headerParameters,
         query: queryParameters,
-        body: SetAllRequestToJSON(requestParameters.setAllRequest),
+        body: SetAllRequestToJSON(requestParameters['setAllRequest']),
       },
       initOverrides,
     );
@@ -924,10 +930,10 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: SetLabelsRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Array<Label>>> {
-    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+    if (requestParameters['projectId'] == null) {
       throw new runtime.RequiredError(
         'projectId',
-        'Required parameter requestParameters.projectId was null or undefined when calling setLabels.',
+        'Required parameter "projectId" was null or undefined when calling setLabels().',
       );
     }
 
@@ -941,12 +947,12 @@ export class ProjectApi extends runtime.BaseAPI {
       {
         path: `/projects/{project_id}/labels`.replace(
           `{${'project_id'}}`,
-          encodeURIComponent(String(requestParameters.projectId)),
+          encodeURIComponent(String(requestParameters['projectId'])),
         ),
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: requestParameters.label.map(LabelToJSON),
+        body: requestParameters['label']!.map(LabelToJSON),
       },
       initOverrides,
     );
@@ -975,10 +981,10 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: SplitDatasetOperationRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<SplitDatasetRequest>> {
-    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+    if (requestParameters['projectId'] == null) {
       throw new runtime.RequiredError(
         'projectId',
-        'Required parameter requestParameters.projectId was null or undefined when calling splitDataset.',
+        'Required parameter "projectId" was null or undefined when calling splitDataset().',
       );
     }
 
@@ -992,12 +998,12 @@ export class ProjectApi extends runtime.BaseAPI {
       {
         path: `/projects/{project_id}/split`.replace(
           `{${'project_id'}}`,
-          encodeURIComponent(String(requestParameters.projectId)),
+          encodeURIComponent(String(requestParameters['projectId'])),
         ),
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: SplitDatasetRequestToJSON(requestParameters.splitDatasetRequest),
+        body: SplitDatasetRequestToJSON(requestParameters['splitDatasetRequest']),
       },
       initOverrides,
     );
@@ -1030,10 +1036,10 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: ToEasydataOperationRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+    if (requestParameters['projectId'] == null) {
       throw new runtime.RequiredError(
         'projectId',
-        'Required parameter requestParameters.projectId was null or undefined when calling toEasydata.',
+        'Required parameter "projectId" was null or undefined when calling toEasydata().',
       );
     }
 
@@ -1047,12 +1053,12 @@ export class ProjectApi extends runtime.BaseAPI {
       {
         path: `/projects/{project_id}/toEasydata`.replace(
           `{${'project_id'}}`,
-          encodeURIComponent(String(requestParameters.projectId)),
+          encodeURIComponent(String(requestParameters['projectId'])),
         ),
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: ToEasydataRequestToJSON(requestParameters.toEasydataRequest),
+        body: ToEasydataRequestToJSON(requestParameters['toEasydataRequest']),
       },
       initOverrides,
     );
@@ -1082,17 +1088,17 @@ export class ProjectApi extends runtime.BaseAPI {
     requestParameters: UpdateRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Project>> {
-    if (requestParameters.projectId === null || requestParameters.projectId === undefined) {
+    if (requestParameters['projectId'] == null) {
       throw new runtime.RequiredError(
         'projectId',
-        'Required parameter requestParameters.projectId was null or undefined when calling update.',
+        'Required parameter "projectId" was null or undefined when calling update().',
       );
     }
 
-    if (requestParameters.project === null || requestParameters.project === undefined) {
+    if (requestParameters['project'] == null) {
       throw new runtime.RequiredError(
         'project',
-        'Required parameter requestParameters.project was null or undefined when calling update.',
+        'Required parameter "project" was null or undefined when calling update().',
       );
     }
 
@@ -1102,20 +1108,20 @@ export class ProjectApi extends runtime.BaseAPI {
 
     headerParameters['Content-Type'] = 'application/json';
 
-    if (requestParameters.requestId !== undefined && requestParameters.requestId !== null) {
-      headerParameters['request_id'] = String(requestParameters.requestId);
+    if (requestParameters['requestId'] != null) {
+      headerParameters['request_id'] = String(requestParameters['requestId']);
     }
 
     const response = await this.request(
       {
         path: `/projects/{project_id}`.replace(
           `{${'project_id'}}`,
-          encodeURIComponent(String(requestParameters.projectId)),
+          encodeURIComponent(String(requestParameters['projectId'])),
         ),
         method: 'PUT',
         headers: headerParameters,
         query: queryParameters,
-        body: ProjectToJSON(requestParameters.project),
+        body: ProjectToJSON(requestParameters['project']),
       },
       initOverrides,
     );

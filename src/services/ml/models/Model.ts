@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -60,10 +60,8 @@ export interface Model {
 /**
  * Check if a given object implements the Model interface.
  */
-export function instanceOfModel(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfModel(value: object): value is Model {
+  return true;
 }
 
 export function ModelFromJSON(json: any): Model {
@@ -71,32 +69,29 @@ export function ModelFromJSON(json: any): Model {
 }
 
 export function ModelFromJSONTyped(json: any, ignoreDiscriminator: boolean): Model {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    name: !exists(json, 'name') ? undefined : json['name'],
-    description: !exists(json, 'description') ? undefined : json['description'],
-    taskCategories: !exists(json, 'task_categories') ? undefined : json['task_categories'],
-    interactive: !exists(json, 'interactive') ? undefined : json['interactive'],
-    labelNames: !exists(json, 'label_names') ? undefined : json['label_names'],
-    languages: !exists(json, 'languages') ? undefined : json['languages'],
+    name: json['name'] == null ? undefined : json['name'],
+    description: json['description'] == null ? undefined : json['description'],
+    taskCategories: json['task_categories'] == null ? undefined : json['task_categories'],
+    interactive: json['interactive'] == null ? undefined : json['interactive'],
+    labelNames: json['label_names'] == null ? undefined : json['label_names'],
+    languages: json['languages'] == null ? undefined : json['languages'],
   };
 }
 
 export function ModelToJSON(value?: Model | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    name: value.name,
-    description: value.description,
-    task_categories: value.taskCategories,
-    interactive: value.interactive,
-    label_names: value.labelNames,
-    languages: value.languages,
+    name: value['name'],
+    description: value['description'],
+    task_categories: value['taskCategories'],
+    interactive: value['interactive'],
+    label_names: value['labelNames'],
+    languages: value['languages'],
   };
 }

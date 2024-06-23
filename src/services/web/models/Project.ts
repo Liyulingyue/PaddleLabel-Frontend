@@ -12,7 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
+import type { TaskCategory } from './TaskCategory';
+import {
+  TaskCategoryFromJSON,
+  TaskCategoryFromJSONTyped,
+  TaskCategoryToJSON,
+} from './TaskCategory';
 import type { Label } from './Label';
 import { LabelFromJSON, LabelFromJSONTyped, LabelToJSON } from './Label';
 import type { ProjectOtherSettings } from './ProjectOtherSettings';
@@ -21,12 +27,6 @@ import {
   ProjectOtherSettingsFromJSONTyped,
   ProjectOtherSettingsToJSON,
 } from './ProjectOtherSettings';
-import type { TaskCategory } from './TaskCategory';
-import {
-  TaskCategoryFromJSON,
-  TaskCategoryFromJSONTyped,
-  TaskCategoryToJSON,
-} from './TaskCategory';
 
 /**
  * project info and settings
@@ -81,13 +81,13 @@ export interface Project {
    * @type {string}
    * @memberof Project
    */
-  readonly created?: string | null;
+  readonly created?: string;
   /**
    * Last time the project detail or ANY TASK of the project is modified
    * @type {string}
    * @memberof Project
    */
-  readonly modified?: string | null;
+  readonly modified?: string;
   /**
    * A string that is unique to each project
    * @type {string}
@@ -111,10 +111,8 @@ export interface Project {
 /**
  * Check if a given object implements the Project interface.
  */
-export function instanceOfProject(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfProject(value: object): value is Project {
+  return true;
 }
 
 export function ProjectFromJSON(json: any): Project {
@@ -122,45 +120,44 @@ export function ProjectFromJSON(json: any): Project {
 }
 
 export function ProjectFromJSONTyped(json: any, ignoreDiscriminator: boolean): Project {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    projectId: !exists(json, 'project_id') ? undefined : json['project_id'],
-    name: !exists(json, 'name') ? undefined : json['name'],
-    description: !exists(json, 'description') ? undefined : json['description'],
-    dataDir: !exists(json, 'data_dir') ? undefined : json['data_dir'],
-    taskCategoryId: !exists(json, 'task_category_id') ? undefined : json['task_category_id'],
-    taskCategory: !exists(json, 'task_category')
-      ? undefined
-      : TaskCategoryFromJSON(json['task_category']),
-    labels: !exists(json, 'labels') ? undefined : (json['labels'] as Array<any>).map(LabelFromJSON),
-    created: !exists(json, 'created') ? undefined : json['created'],
-    modified: !exists(json, 'modified') ? undefined : json['modified'],
-    upid: !exists(json, 'upid') ? undefined : json['upid'],
-    otherSettings: !exists(json, 'other_settings')
-      ? undefined
-      : ProjectOtherSettingsFromJSON(json['other_settings']),
-    allOptions: !exists(json, 'all_options') ? undefined : json['all_options'],
+    projectId: json['project_id'] == null ? undefined : json['project_id'],
+    name: json['name'] == null ? undefined : json['name'],
+    description: json['description'] == null ? undefined : json['description'],
+    dataDir: json['data_dir'] == null ? undefined : json['data_dir'],
+    taskCategoryId: json['task_category_id'] == null ? undefined : json['task_category_id'],
+    taskCategory:
+      json['task_category'] == null ? undefined : TaskCategoryFromJSON(json['task_category']),
+    labels: json['labels'] == null ? undefined : (json['labels'] as Array<any>).map(LabelFromJSON),
+    created: json['created'] == null ? undefined : json['created'],
+    modified: json['modified'] == null ? undefined : json['modified'],
+    upid: json['upid'] == null ? undefined : json['upid'],
+    otherSettings:
+      json['other_settings'] == null
+        ? undefined
+        : ProjectOtherSettingsFromJSON(json['other_settings']),
+    allOptions: json['all_options'] == null ? undefined : json['all_options'],
   };
 }
 
-export function ProjectToJSON(value?: Project | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+export function ProjectToJSON(
+  value?: Omit<Project, 'project_id' | 'created' | 'modified'> | null,
+): any {
+  if (value == null) {
+    return value;
   }
   return {
-    name: value.name,
-    description: value.description,
-    data_dir: value.dataDir,
-    task_category_id: value.taskCategoryId,
-    task_category: TaskCategoryToJSON(value.taskCategory),
-    labels: value.labels === undefined ? undefined : (value.labels as Array<any>).map(LabelToJSON),
-    upid: value.upid,
-    other_settings: ProjectOtherSettingsToJSON(value.otherSettings),
-    all_options: value.allOptions,
+    name: value['name'],
+    description: value['description'],
+    data_dir: value['dataDir'],
+    task_category_id: value['taskCategoryId'],
+    task_category: TaskCategoryToJSON(value['taskCategory']),
+    labels: value['labels'] == null ? undefined : (value['labels'] as Array<any>).map(LabelToJSON),
+    upid: value['upid'],
+    other_settings: ProjectOtherSettingsToJSON(value['otherSettings']),
+    all_options: value['allOptions'],
   };
 }

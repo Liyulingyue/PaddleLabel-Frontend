@@ -19,7 +19,7 @@ import type {
   GetFoldersRequest,
   Points2polygonRequest,
   Polygon2pointsRequest,
-} from '../models';
+} from '../models/index';
 import {
   CreateCache200ResponseFromJSON,
   CreateCache200ResponseToJSON,
@@ -31,7 +31,7 @@ import {
   Points2polygonRequestToJSON,
   Polygon2pointsRequestFromJSON,
   Polygon2pointsRequestToJSON,
-} from '../models';
+} from '../models/index';
 
 export interface CreateCacheOperationRequest {
   createCacheRequest?: CreateCacheRequest;
@@ -80,7 +80,7 @@ export class RpcApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: CreateCacheRequestToJSON(requestParameters.createCacheRequest),
+        body: CreateCacheRequestToJSON(requestParameters['createCacheRequest']),
       },
       initOverrides,
     );
@@ -111,10 +111,10 @@ export class RpcApi extends runtime.BaseAPI {
     requestParameters: GetCacheRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<CreateCacheRequest>> {
-    if (requestParameters.cacheId === null || requestParameters.cacheId === undefined) {
+    if (requestParameters['cacheId'] == null) {
       throw new runtime.RequiredError(
         'cacheId',
-        'Required parameter requestParameters.cacheId was null or undefined when calling getCache.',
+        'Required parameter "cacheId" was null or undefined when calling getCache().',
       );
     }
 
@@ -126,7 +126,7 @@ export class RpcApi extends runtime.BaseAPI {
       {
         path: `/rpc/cache/{cache_id}`.replace(
           `{${'cache_id'}}`,
-          encodeURIComponent(String(requestParameters.cacheId)),
+          encodeURIComponent(String(requestParameters['cacheId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -170,7 +170,7 @@ export class RpcApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: GetFoldersRequestToJSON(requestParameters.getFoldersRequest),
+        body: GetFoldersRequestToJSON(requestParameters['getFoldersRequest']),
       },
       initOverrides,
     );
@@ -207,7 +207,7 @@ export class RpcApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: Points2polygonRequestToJSON(requestParameters.points2polygonRequest),
+        body: Points2polygonRequestToJSON(requestParameters['points2polygonRequest']),
       },
       initOverrides,
     );
@@ -248,12 +248,16 @@ export class RpcApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: Polygon2pointsRequestToJSON(requestParameters.polygon2pointsRequest),
+        body: Polygon2pointsRequestToJSON(requestParameters['polygon2pointsRequest']),
       },
       initOverrides,
     );
 
-    return new runtime.TextApiResponse(response) as any;
+    if (this.isJsonMime(response.headers.get('content-type'))) {
+      return new runtime.JSONApiResponse<string>(response);
+    } else {
+      return new runtime.TextApiResponse(response) as any;
+    }
   }
 
   /**
@@ -277,10 +281,10 @@ export class RpcApi extends runtime.BaseAPI {
     requestParameters: PrintDebugIdRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.debugId === null || requestParameters.debugId === undefined) {
+    if (requestParameters['debugId'] == null) {
       throw new runtime.RequiredError(
         'debugId',
-        'Required parameter requestParameters.debugId was null or undefined when calling printDebugId.',
+        'Required parameter "debugId" was null or undefined when calling printDebugId().',
       );
     }
 
@@ -292,7 +296,7 @@ export class RpcApi extends runtime.BaseAPI {
       {
         path: `/debug/printid/{debug_id}`.replace(
           `{${'debug_id'}}`,
-          encodeURIComponent(String(requestParameters.debugId)),
+          encodeURIComponent(String(requestParameters['debugId'])),
         ),
         method: 'GET',
         headers: headerParameters,

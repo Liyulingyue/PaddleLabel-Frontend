@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -30,10 +30,8 @@ export interface CreateCache200Response {
 /**
  * Check if a given object implements the CreateCache200Response interface.
  */
-export function instanceOfCreateCache200Response(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfCreateCache200Response(value: object): value is CreateCache200Response {
+  return true;
 }
 
 export function CreateCache200ResponseFromJSON(json: any): CreateCache200Response {
@@ -44,22 +42,19 @@ export function CreateCache200ResponseFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): CreateCache200Response {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    cacheId: !exists(json, 'cache_id') ? undefined : json['cache_id'],
+    cacheId: json['cache_id'] == null ? undefined : json['cache_id'],
   };
 }
 
 export function CreateCache200ResponseToJSON(value?: CreateCache200Response | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    cache_id: value.cacheId,
+    cache_id: value['cacheId'],
   };
 }

@@ -13,13 +13,13 @@
  */
 
 import * as runtime from '../runtime';
-import type { PaddlelabelApiControllerUserLoginRequest, User } from '../models';
+import type { PaddlelabelApiControllerUserLoginRequest, User } from '../models/index';
 import {
   PaddlelabelApiControllerUserLoginRequestFromJSON,
   PaddlelabelApiControllerUserLoginRequestToJSON,
   UserFromJSON,
   UserToJSON,
-} from '../models';
+} from '../models/index';
 
 export interface GetRequest {
   uuid: string;
@@ -35,7 +35,7 @@ export interface RemoveRequest {
 
 export interface UpdateRequest {
   uuid: string;
-  user: User;
+  user: Omit<User, 'user_id'>;
 }
 
 /**
@@ -83,10 +83,10 @@ export class UserApi extends runtime.BaseAPI {
     requestParameters: GetRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<User>> {
-    if (requestParameters.uuid === null || requestParameters.uuid === undefined) {
+    if (requestParameters['uuid'] == null) {
       throw new runtime.RequiredError(
         'uuid',
-        'Required parameter requestParameters.uuid was null or undefined when calling get.',
+        'Required parameter "uuid" was null or undefined when calling get().',
       );
     }
 
@@ -98,7 +98,7 @@ export class UserApi extends runtime.BaseAPI {
       {
         path: `/users/{uuid}`.replace(
           `{${'uuid'}}`,
-          encodeURIComponent(String(requestParameters.uuid)),
+          encodeURIComponent(String(requestParameters['uuid'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -173,7 +173,7 @@ export class UserApi extends runtime.BaseAPI {
         headers: headerParameters,
         query: queryParameters,
         body: PaddlelabelApiControllerUserLoginRequestToJSON(
-          requestParameters.paddlelabelApiControllerUserLoginRequest,
+          requestParameters['paddlelabelApiControllerUserLoginRequest'],
         ),
       },
       initOverrides,
@@ -203,10 +203,10 @@ export class UserApi extends runtime.BaseAPI {
     requestParameters: RemoveRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.uuid === null || requestParameters.uuid === undefined) {
+    if (requestParameters['uuid'] == null) {
       throw new runtime.RequiredError(
         'uuid',
-        'Required parameter requestParameters.uuid was null or undefined when calling remove.',
+        'Required parameter "uuid" was null or undefined when calling remove().',
       );
     }
 
@@ -218,7 +218,7 @@ export class UserApi extends runtime.BaseAPI {
       {
         path: `/users/{uuid}`.replace(
           `{${'uuid'}}`,
-          encodeURIComponent(String(requestParameters.uuid)),
+          encodeURIComponent(String(requestParameters['uuid'])),
         ),
         method: 'DELETE',
         headers: headerParameters,
@@ -249,17 +249,17 @@ export class UserApi extends runtime.BaseAPI {
     requestParameters: UpdateRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<User>> {
-    if (requestParameters.uuid === null || requestParameters.uuid === undefined) {
+    if (requestParameters['uuid'] == null) {
       throw new runtime.RequiredError(
         'uuid',
-        'Required parameter requestParameters.uuid was null or undefined when calling update.',
+        'Required parameter "uuid" was null or undefined when calling update().',
       );
     }
 
-    if (requestParameters.user === null || requestParameters.user === undefined) {
+    if (requestParameters['user'] == null) {
       throw new runtime.RequiredError(
         'user',
-        'Required parameter requestParameters.user was null or undefined when calling update.',
+        'Required parameter "user" was null or undefined when calling update().',
       );
     }
 
@@ -273,12 +273,12 @@ export class UserApi extends runtime.BaseAPI {
       {
         path: `/users/{uuid}`.replace(
           `{${'uuid'}}`,
-          encodeURIComponent(String(requestParameters.uuid)),
+          encodeURIComponent(String(requestParameters['uuid'])),
         ),
         method: 'PUT',
         headers: headerParameters,
         query: queryParameters,
-        body: UserToJSON(requestParameters.user),
+        body: UserToJSON(requestParameters['user']),
       },
       initOverrides,
     );

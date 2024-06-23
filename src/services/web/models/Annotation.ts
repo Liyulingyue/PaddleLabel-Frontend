@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Label } from './Label';
 import { LabelFromJSON, LabelFromJSONTyped, LabelToJSON } from './Label';
 
@@ -101,11 +101,9 @@ export interface Annotation {
 /**
  * Check if a given object implements the Annotation interface.
  */
-export function instanceOfAnnotation(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'dataId' in value;
-
-  return isInstance;
+export function instanceOfAnnotation(value: object): value is Annotation {
+  if (!('dataId' in value) || value['dataId'] === undefined) return false;
+  return true;
 }
 
 export function AnnotationFromJSON(json: any): Annotation {
@@ -113,42 +111,39 @@ export function AnnotationFromJSON(json: any): Annotation {
 }
 
 export function AnnotationFromJSONTyped(json: any, ignoreDiscriminator: boolean): Annotation {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    annotationId: !exists(json, 'annotation_id') ? undefined : json['annotation_id'],
-    frontendId: !exists(json, 'frontend_id') ? undefined : json['frontend_id'],
-    taskId: !exists(json, 'task_id') ? undefined : json['task_id'],
-    labelId: !exists(json, 'label_id') ? undefined : json['label_id'],
-    label: !exists(json, 'label') ? undefined : LabelFromJSON(json['label']),
-    projectId: !exists(json, 'project_id') ? undefined : json['project_id'],
+    annotationId: json['annotation_id'] == null ? undefined : json['annotation_id'],
+    frontendId: json['frontend_id'] == null ? undefined : json['frontend_id'],
+    taskId: json['task_id'] == null ? undefined : json['task_id'],
+    labelId: json['label_id'] == null ? undefined : json['label_id'],
+    label: json['label'] == null ? undefined : LabelFromJSON(json['label']),
+    projectId: json['project_id'] == null ? undefined : json['project_id'],
     dataId: json['data_id'],
-    result: !exists(json, 'result') ? undefined : json['result'],
-    type: !exists(json, 'type') ? undefined : json['type'],
-    created: !exists(json, 'created') ? undefined : json['created'],
-    modified: !exists(json, 'modified') ? undefined : json['modified'],
-    predictedBy: !exists(json, 'predicted_by') ? undefined : json['predicted_by'],
+    result: json['result'] == null ? undefined : json['result'],
+    type: json['type'] == null ? undefined : json['type'],
+    created: json['created'] == null ? undefined : json['created'],
+    modified: json['modified'] == null ? undefined : json['modified'],
+    predictedBy: json['predicted_by'] == null ? undefined : json['predicted_by'],
   };
 }
 
-export function AnnotationToJSON(value?: Annotation | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+export function AnnotationToJSON(value?: Omit<Annotation, 'created' | 'modified'> | null): any {
+  if (value == null) {
+    return value;
   }
   return {
-    annotation_id: value.annotationId,
-    frontend_id: value.frontendId,
-    task_id: value.taskId,
-    label_id: value.labelId,
-    label: LabelToJSON(value.label),
-    project_id: value.projectId,
-    data_id: value.dataId,
-    result: value.result,
-    type: value.type,
-    predicted_by: value.predictedBy,
+    annotation_id: value['annotationId'],
+    frontend_id: value['frontendId'],
+    task_id: value['taskId'],
+    label_id: value['labelId'],
+    label: LabelToJSON(value['label']),
+    project_id: value['projectId'],
+    data_id: value['dataId'],
+    result: value['result'],
+    type: value['type'],
+    predicted_by: value['predictedBy'],
   };
 }

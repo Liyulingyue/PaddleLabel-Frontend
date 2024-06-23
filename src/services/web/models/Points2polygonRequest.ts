@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -30,10 +30,8 @@ export interface Points2polygonRequest {
 /**
  * Check if a given object implements the Points2polygonRequest interface.
  */
-export function instanceOfPoints2polygonRequest(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfPoints2polygonRequest(value: object): value is Points2polygonRequest {
+  return true;
 }
 
 export function Points2polygonRequestFromJSON(json: any): Points2polygonRequest {
@@ -44,22 +42,19 @@ export function Points2polygonRequestFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): Points2polygonRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    points: !exists(json, 'points') ? undefined : json['points'],
+    points: json['points'] == null ? undefined : json['points'],
   };
 }
 
 export function Points2polygonRequestToJSON(value?: Points2polygonRequest | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    points: value.points,
+    points: value['points'],
   };
 }

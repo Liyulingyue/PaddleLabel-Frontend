@@ -12,11 +12,11 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
-import type { Annotation } from './Annotation';
-import { AnnotationFromJSON, AnnotationFromJSONTyped, AnnotationToJSON } from './Annotation';
+import { mapValues } from '../runtime';
 import type { Project } from './Project';
 import { ProjectFromJSON, ProjectFromJSONTyped, ProjectToJSON } from './Project';
+import type { Annotation } from './Annotation';
+import { AnnotationFromJSON, AnnotationFromJSONTyped, AnnotationToJSON } from './Annotation';
 
 /**
  * An annotation task
@@ -77,11 +77,9 @@ export interface Task {
 /**
  * Check if a given object implements the Task interface.
  */
-export function instanceOfTask(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'projectId' in value;
-
-  return isInstance;
+export function instanceOfTask(value: object): value is Task {
+  if (!('projectId' in value) || value['projectId'] === undefined) return false;
+  return true;
 }
 
 export function TaskFromJSON(json: any): Task {
@@ -89,38 +87,36 @@ export function TaskFromJSON(json: any): Task {
 }
 
 export function TaskFromJSONTyped(json: any, ignoreDiscriminator: boolean): Task {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    taskId: !exists(json, 'task_id') ? undefined : json['task_id'],
+    taskId: json['task_id'] == null ? undefined : json['task_id'],
     projectId: json['project_id'],
-    dataPaths: !exists(json, 'data_paths') ? undefined : json['data_paths'],
-    annotations: !exists(json, 'annotations')
-      ? undefined
-      : (json['annotations'] as Array<any>).map(AnnotationFromJSON),
-    project: !exists(json, 'project') ? undefined : ProjectFromJSON(json['project']),
-    set: !exists(json, 'set') ? undefined : json['set'],
-    modified: !exists(json, 'modified') ? undefined : json['modified'],
-    created: !exists(json, 'created') ? undefined : json['created'],
+    dataPaths: json['data_paths'] == null ? undefined : json['data_paths'],
+    annotations:
+      json['annotations'] == null
+        ? undefined
+        : (json['annotations'] as Array<any>).map(AnnotationFromJSON),
+    project: json['project'] == null ? undefined : ProjectFromJSON(json['project']),
+    set: json['set'] == null ? undefined : json['set'],
+    modified: json['modified'] == null ? undefined : json['modified'],
+    created: json['created'] == null ? undefined : json['created'],
   };
 }
 
-export function TaskToJSON(value?: Task | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+export function TaskToJSON(value?: Omit<Task, 'task_id' | 'modified' | 'created'> | null): any {
+  if (value == null) {
+    return value;
   }
   return {
-    project_id: value.projectId,
-    data_paths: value.dataPaths,
+    project_id: value['projectId'],
+    data_paths: value['dataPaths'],
     annotations:
-      value.annotations === undefined
+      value['annotations'] == null
         ? undefined
-        : (value.annotations as Array<any>).map(AnnotationToJSON),
-    project: ProjectToJSON(value.project),
-    set: value.set,
+        : (value['annotations'] as Array<any>).map(AnnotationToJSON),
+    project: ProjectToJSON(value['project']),
+    set: value['set'],
   };
 }

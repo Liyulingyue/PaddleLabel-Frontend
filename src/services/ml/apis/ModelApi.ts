@@ -13,7 +13,7 @@
  */
 
 import * as runtime from '../runtime';
-import type { LoadRequest, Model, PredictRequest, TrainRequest } from '../models';
+import type { LoadRequest, Model, PredictRequest, TrainRequest } from '../models/index';
 import {
   LoadRequestFromJSON,
   LoadRequestToJSON,
@@ -23,7 +23,7 @@ import {
   PredictRequestToJSON,
   TrainRequestFromJSON,
   TrainRequestToJSON,
-} from '../models';
+} from '../models/index';
 
 export interface EvaluateRequest {
   modelName: string;
@@ -64,10 +64,10 @@ export class ModelApi extends runtime.BaseAPI {
     requestParameters: EvaluateRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.modelName === null || requestParameters.modelName === undefined) {
+    if (requestParameters['modelName'] == null) {
       throw new runtime.RequiredError(
         'modelName',
-        'Required parameter requestParameters.modelName was null or undefined when calling evaluate.',
+        'Required parameter "modelName" was null or undefined when calling evaluate().',
       );
     }
 
@@ -79,7 +79,7 @@ export class ModelApi extends runtime.BaseAPI {
       {
         path: `/{model_name}/eval`.replace(
           `{${'model_name'}}`,
-          encodeURIComponent(String(requestParameters.modelName)),
+          encodeURIComponent(String(requestParameters['modelName'])),
         ),
         method: 'POST',
         headers: headerParameters,
@@ -143,10 +143,10 @@ export class ModelApi extends runtime.BaseAPI {
     requestParameters: GetProgressRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.modelName === null || requestParameters.modelName === undefined) {
+    if (requestParameters['modelName'] == null) {
       throw new runtime.RequiredError(
         'modelName',
-        'Required parameter requestParameters.modelName was null or undefined when calling getProgress.',
+        'Required parameter "modelName" was null or undefined when calling getProgress().',
       );
     }
 
@@ -158,7 +158,7 @@ export class ModelApi extends runtime.BaseAPI {
       {
         path: `/{model_name}/train`.replace(
           `{${'model_name'}}`,
-          encodeURIComponent(String(requestParameters.modelName)),
+          encodeURIComponent(String(requestParameters['modelName'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -201,7 +201,11 @@ export class ModelApi extends runtime.BaseAPI {
       initOverrides,
     );
 
-    return new runtime.TextApiResponse(response) as any;
+    if (this.isJsonMime(response.headers.get('content-type'))) {
+      return new runtime.JSONApiResponse<string>(response);
+    } else {
+      return new runtime.TextApiResponse(response) as any;
+    }
   }
 
   /**
@@ -233,7 +237,11 @@ export class ModelApi extends runtime.BaseAPI {
       initOverrides,
     );
 
-    return new runtime.TextApiResponse(response) as any;
+    if (this.isJsonMime(response.headers.get('content-type'))) {
+      return new runtime.JSONApiResponse<string>(response);
+    } else {
+      return new runtime.TextApiResponse(response) as any;
+    }
   }
 
   /**
@@ -253,10 +261,10 @@ export class ModelApi extends runtime.BaseAPI {
     requestParameters: LoadOperationRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.modelName === null || requestParameters.modelName === undefined) {
+    if (requestParameters['modelName'] == null) {
       throw new runtime.RequiredError(
         'modelName',
-        'Required parameter requestParameters.modelName was null or undefined when calling load.',
+        'Required parameter "modelName" was null or undefined when calling load().',
       );
     }
 
@@ -270,12 +278,12 @@ export class ModelApi extends runtime.BaseAPI {
       {
         path: `/{model_name}/load`.replace(
           `{${'model_name'}}`,
-          encodeURIComponent(String(requestParameters.modelName)),
+          encodeURIComponent(String(requestParameters['modelName'])),
         ),
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: LoadRequestToJSON(requestParameters.loadRequest),
+        body: LoadRequestToJSON(requestParameters['loadRequest']),
       },
       initOverrides,
     );
@@ -303,10 +311,10 @@ export class ModelApi extends runtime.BaseAPI {
     requestParameters: PredictOperationRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<object>> {
-    if (requestParameters.modelName === null || requestParameters.modelName === undefined) {
+    if (requestParameters['modelName'] == null) {
       throw new runtime.RequiredError(
         'modelName',
-        'Required parameter requestParameters.modelName was null or undefined when calling predict.',
+        'Required parameter "modelName" was null or undefined when calling predict().',
       );
     }
 
@@ -320,12 +328,12 @@ export class ModelApi extends runtime.BaseAPI {
       {
         path: `/{model_name}/predict`.replace(
           `{${'model_name'}}`,
-          encodeURIComponent(String(requestParameters.modelName)),
+          encodeURIComponent(String(requestParameters['modelName'])),
         ),
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: PredictRequestToJSON(requestParameters.predictRequest),
+        body: PredictRequestToJSON(requestParameters['predictRequest']),
       },
       initOverrides,
     );
@@ -357,10 +365,10 @@ export class ModelApi extends runtime.BaseAPI {
     requestParameters: TrainOperationRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.modelName === null || requestParameters.modelName === undefined) {
+    if (requestParameters['modelName'] == null) {
       throw new runtime.RequiredError(
         'modelName',
-        'Required parameter requestParameters.modelName was null or undefined when calling train.',
+        'Required parameter "modelName" was null or undefined when calling train().',
       );
     }
 
@@ -374,12 +382,12 @@ export class ModelApi extends runtime.BaseAPI {
       {
         path: `/{model_name}/train`.replace(
           `{${'model_name'}}`,
-          encodeURIComponent(String(requestParameters.modelName)),
+          encodeURIComponent(String(requestParameters['modelName'])),
         ),
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: TrainRequestToJSON(requestParameters.trainRequest),
+        body: TrainRequestToJSON(requestParameters['trainRequest']),
       },
       initOverrides,
     );
@@ -407,10 +415,10 @@ export class ModelApi extends runtime.BaseAPI {
     requestParameters: UnloadRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.modelName === null || requestParameters.modelName === undefined) {
+    if (requestParameters['modelName'] == null) {
       throw new runtime.RequiredError(
         'modelName',
-        'Required parameter requestParameters.modelName was null or undefined when calling unload.',
+        'Required parameter "modelName" was null or undefined when calling unload().',
       );
     }
 
@@ -422,7 +430,7 @@ export class ModelApi extends runtime.BaseAPI {
       {
         path: `/{model_name}/unload`.replace(
           `{${'model_name'}}`,
-          encodeURIComponent(String(requestParameters.modelName)),
+          encodeURIComponent(String(requestParameters['modelName'])),
         ),
         method: 'GET',
         headers: headerParameters,

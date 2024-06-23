@@ -13,13 +13,13 @@
  */
 
 import * as runtime from '../runtime';
-import type { LoadSample200Response, LoadSampleRequest } from '../models';
+import type { LoadSample200Response, LoadSampleRequest } from '../models/index';
 import {
   LoadSample200ResponseFromJSON,
   LoadSample200ResponseToJSON,
   LoadSampleRequestFromJSON,
   LoadSampleRequestToJSON,
-} from '../models';
+} from '../models/index';
 
 export interface GetFileRequest {
   path?: string;
@@ -46,8 +46,8 @@ export class SampleApi extends runtime.BaseAPI {
   ): Promise<runtime.ApiResponse<void>> {
     const queryParameters: any = {};
 
-    if (requestParameters.path !== undefined) {
-      queryParameters['path'] = requestParameters.path;
+    if (requestParameters['path'] != null) {
+      queryParameters['path'] = requestParameters['path'];
     }
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -82,17 +82,17 @@ export class SampleApi extends runtime.BaseAPI {
     requestParameters: GetStructureRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Array<object>>> {
-    if (requestParameters.path === null || requestParameters.path === undefined) {
+    if (requestParameters['path'] == null) {
       throw new runtime.RequiredError(
         'path',
-        'Required parameter requestParameters.path was null or undefined when calling getStructure.',
+        'Required parameter "path" was null or undefined when calling getStructure().',
       );
     }
 
     const queryParameters: any = {};
 
-    if (requestParameters.path !== undefined) {
-      queryParameters['path'] = requestParameters.path;
+    if (requestParameters['path'] != null) {
+      queryParameters['path'] = requestParameters['path'];
     }
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -140,7 +140,7 @@ export class SampleApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: LoadSampleRequestToJSON(requestParameters.loadSampleRequest),
+        body: LoadSampleRequestToJSON(requestParameters['loadSampleRequest']),
       },
       initOverrides,
     );

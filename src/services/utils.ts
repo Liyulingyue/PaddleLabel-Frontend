@@ -397,6 +397,7 @@ export const LabelUtils = (
   async function create(label: Label | Label[]): Promise<Label[] | undefined> {
     try {
       // debugger;
+      console.log('Creating labels:', label);
       const newLabels = await labelApi.create(
         label instanceof Array ? label : [label],
         undefined,
@@ -406,6 +407,7 @@ export const LabelUtils = (
       getAll(label instanceof Array ? label[0].projectId : label.projectId);
       return newLabels;
     } catch (err) {
+      console.error('Error creating labels:', err);
       serviceUtils.parseError(err, message);
       return;
     }

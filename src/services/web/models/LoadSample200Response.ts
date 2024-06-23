@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -30,10 +30,8 @@ export interface LoadSample200Response {
 /**
  * Check if a given object implements the LoadSample200Response interface.
  */
-export function instanceOfLoadSample200Response(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfLoadSample200Response(value: object): value is LoadSample200Response {
+  return true;
 }
 
 export function LoadSample200ResponseFromJSON(json: any): LoadSample200Response {
@@ -44,22 +42,19 @@ export function LoadSample200ResponseFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): LoadSample200Response {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    projectId: !exists(json, 'project_id') ? undefined : json['project_id'],
+    projectId: json['project_id'] == null ? undefined : json['project_id'],
   };
 }
 
 export function LoadSample200ResponseToJSON(value?: LoadSample200Response | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    project_id: value.projectId,
+    project_id: value['projectId'],
   };
 }

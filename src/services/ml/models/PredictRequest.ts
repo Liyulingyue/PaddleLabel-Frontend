@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { PredictRequestOther } from './PredictRequestOther';
 import {
   PredictRequestOtherFromJSON,
@@ -55,12 +55,10 @@ export interface PredictRequest {
 /**
  * Check if a given object implements the PredictRequest interface.
  */
-export function instanceOfPredictRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'img' in value;
-  isInstance = isInstance && 'format' in value;
-
-  return isInstance;
+export function instanceOfPredictRequest(value: object): value is PredictRequest {
+  if (!('img' in value) || value['img'] === undefined) return false;
+  if (!('format' in value) || value['format'] === undefined) return false;
+  return true;
 }
 
 export function PredictRequestFromJSON(json: any): PredictRequest {
@@ -71,28 +69,25 @@ export function PredictRequestFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): PredictRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
     img: json['img'],
     format: json['format'],
-    piggyback: !exists(json, 'piggyback') ? undefined : json['piggyback'],
-    other: !exists(json, 'other') ? undefined : PredictRequestOtherFromJSON(json['other']),
+    piggyback: json['piggyback'] == null ? undefined : json['piggyback'],
+    other: json['other'] == null ? undefined : PredictRequestOtherFromJSON(json['other']),
   };
 }
 
 export function PredictRequestToJSON(value?: PredictRequest | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    img: value.img,
-    format: value.format,
-    piggyback: value.piggyback,
-    other: PredictRequestOtherToJSON(value.other),
+    img: value['img'],
+    format: value['format'],
+    piggyback: value['piggyback'],
+    other: PredictRequestOtherToJSON(value['other']),
   };
 }

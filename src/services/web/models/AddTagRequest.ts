@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -30,10 +30,8 @@ export interface AddTagRequest {
 /**
  * Check if a given object implements the AddTagRequest interface.
  */
-export function instanceOfAddTagRequest(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfAddTagRequest(value: object): value is AddTagRequest {
+  return true;
 }
 
 export function AddTagRequestFromJSON(json: any): AddTagRequest {
@@ -41,22 +39,19 @@ export function AddTagRequestFromJSON(json: any): AddTagRequest {
 }
 
 export function AddTagRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): AddTagRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    tagId: !exists(json, 'tag_id') ? undefined : json['tag_id'],
+    tagId: json['tag_id'] == null ? undefined : json['tag_id'],
   };
 }
 
 export function AddTagRequestToJSON(value?: AddTagRequest | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    tag_id: value.tagId,
+    tag_id: value['tagId'],
   };
 }

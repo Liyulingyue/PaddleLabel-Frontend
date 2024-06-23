@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -48,10 +48,8 @@ export interface TagTask {
 /**
  * Check if a given object implements the TagTask interface.
  */
-export function instanceOfTagTask(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfTagTask(value: object): value is TagTask {
+  return true;
 }
 
 export function TagTaskFromJSON(json: any): TagTask {
@@ -59,28 +57,25 @@ export function TagTaskFromJSON(json: any): TagTask {
 }
 
 export function TagTaskFromJSONTyped(json: any, ignoreDiscriminator: boolean): TagTask {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    tagTaskId: !exists(json, 'tag_task_id') ? undefined : json['tag_task_id'],
-    projectId: !exists(json, 'project_id') ? undefined : json['project_id'],
-    tagId: !exists(json, 'tag_id') ? undefined : json['tag_id'],
-    taskId: !exists(json, 'task_id') ? undefined : json['task_id'],
+    tagTaskId: json['tag_task_id'] == null ? undefined : json['tag_task_id'],
+    projectId: json['project_id'] == null ? undefined : json['project_id'],
+    tagId: json['tag_id'] == null ? undefined : json['tag_id'],
+    taskId: json['task_id'] == null ? undefined : json['task_id'],
   };
 }
 
 export function TagTaskToJSON(value?: TagTask | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    tag_task_id: value.tagTaskId,
-    project_id: value.projectId,
-    tag_id: value.tagId,
-    task_id: value.taskId,
+    tag_task_id: value['tagTaskId'],
+    project_id: value['projectId'],
+    tag_id: value['tagId'],
+    task_id: value['taskId'],
   };
 }

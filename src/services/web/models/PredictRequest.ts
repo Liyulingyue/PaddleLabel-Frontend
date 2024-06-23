@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -49,12 +49,10 @@ export interface PredictRequest {
 /**
  * Check if a given object implements the PredictRequest interface.
  */
-export function instanceOfPredictRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'mlBackendUrl' in value;
-  isInstance = isInstance && 'model' in value;
-
-  return isInstance;
+export function instanceOfPredictRequest(value: object): value is PredictRequest {
+  if (!('mlBackendUrl' in value) || value['mlBackendUrl'] === undefined) return false;
+  if (!('model' in value) || value['model'] === undefined) return false;
+  return true;
 }
 
 export function PredictRequestFromJSON(json: any): PredictRequest {
@@ -65,28 +63,25 @@ export function PredictRequestFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): PredictRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
     mlBackendUrl: json['ml_backend_url'],
     model: json['model'],
-    sameServer: !exists(json, 'same_server') ? undefined : json['same_server'],
-    createLabel: !exists(json, 'create_label') ? undefined : json['create_label'],
+    sameServer: json['same_server'] == null ? undefined : json['same_server'],
+    createLabel: json['create_label'] == null ? undefined : json['create_label'],
   };
 }
 
 export function PredictRequestToJSON(value?: PredictRequest | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    ml_backend_url: value.mlBackendUrl,
-    model: value.model,
-    same_server: value.sameServer,
-    create_label: value.createLabel,
+    ml_backend_url: value['mlBackendUrl'],
+    model: value['model'],
+    same_server: value['sameServer'],
+    create_label: value['createLabel'],
   };
 }

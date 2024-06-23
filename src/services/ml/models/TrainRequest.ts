@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -36,12 +36,10 @@ export interface TrainRequest {
 /**
  * Check if a given object implements the TrainRequest interface.
  */
-export function instanceOfTrainRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'dataDir' in value;
-  isInstance = isInstance && 'configs' in value;
-
-  return isInstance;
+export function instanceOfTrainRequest(value: object): value is TrainRequest {
+  if (!('dataDir' in value) || value['dataDir'] === undefined) return false;
+  if (!('configs' in value) || value['configs'] === undefined) return false;
+  return true;
 }
 
 export function TrainRequestFromJSON(json: any): TrainRequest {
@@ -49,7 +47,7 @@ export function TrainRequestFromJSON(json: any): TrainRequest {
 }
 
 export function TrainRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): TrainRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -59,14 +57,11 @@ export function TrainRequestFromJSONTyped(json: any, ignoreDiscriminator: boolea
 }
 
 export function TrainRequestToJSON(value?: TrainRequest | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    data_dir: value.dataDir,
-    configs: value.configs,
+    data_dir: value['dataDir'],
+    configs: value['configs'],
   };
 }

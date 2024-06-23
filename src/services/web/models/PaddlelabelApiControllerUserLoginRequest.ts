@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -36,12 +36,12 @@ export interface PaddlelabelApiControllerUserLoginRequest {
 /**
  * Check if a given object implements the PaddlelabelApiControllerUserLoginRequest interface.
  */
-export function instanceOfPaddlelabelApiControllerUserLoginRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'username' in value;
-  isInstance = isInstance && 'password' in value;
-
-  return isInstance;
+export function instanceOfPaddlelabelApiControllerUserLoginRequest(
+  value: object,
+): value is PaddlelabelApiControllerUserLoginRequest {
+  if (!('username' in value) || value['username'] === undefined) return false;
+  if (!('password' in value) || value['password'] === undefined) return false;
+  return true;
 }
 
 export function PaddlelabelApiControllerUserLoginRequestFromJSON(
@@ -54,7 +54,7 @@ export function PaddlelabelApiControllerUserLoginRequestFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): PaddlelabelApiControllerUserLoginRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
@@ -66,14 +66,11 @@ export function PaddlelabelApiControllerUserLoginRequestFromJSONTyped(
 export function PaddlelabelApiControllerUserLoginRequestToJSON(
   value?: PaddlelabelApiControllerUserLoginRequest | null,
 ): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    username: value.username,
-    password: value.password,
+    username: value['username'],
+    password: value['password'],
   };
 }

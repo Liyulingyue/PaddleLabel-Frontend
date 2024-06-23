@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -36,10 +36,8 @@ export interface GetProgress200Response {
 /**
  * Check if a given object implements the GetProgress200Response interface.
  */
-export function instanceOfGetProgress200Response(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfGetProgress200Response(value: object): value is GetProgress200Response {
+  return true;
 }
 
 export function GetProgress200ResponseFromJSON(json: any): GetProgress200Response {
@@ -50,24 +48,21 @@ export function GetProgress200ResponseFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): GetProgress200Response {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    finished: !exists(json, 'finished') ? undefined : json['finished'],
-    total: !exists(json, 'total') ? undefined : json['total'],
+    finished: json['finished'] == null ? undefined : json['finished'],
+    total: json['total'] == null ? undefined : json['total'],
   };
 }
 
 export function GetProgress200ResponseToJSON(value?: GetProgress200Response | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    finished: value.finished,
-    total: value.total,
+    finished: value['finished'],
+    total: value['total'],
   };
 }

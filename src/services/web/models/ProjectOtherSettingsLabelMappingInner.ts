@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -36,10 +36,10 @@ export interface ProjectOtherSettingsLabelMappingInner {
 /**
  * Check if a given object implements the ProjectOtherSettingsLabelMappingInner interface.
  */
-export function instanceOfProjectOtherSettingsLabelMappingInner(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfProjectOtherSettingsLabelMappingInner(
+  value: object,
+): value is ProjectOtherSettingsLabelMappingInner {
+  return true;
 }
 
 export function ProjectOtherSettingsLabelMappingInnerFromJSON(
@@ -52,26 +52,23 @@ export function ProjectOtherSettingsLabelMappingInnerFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): ProjectOtherSettingsLabelMappingInner {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    model: !exists(json, 'model') ? undefined : json['model'],
-    project: !exists(json, 'project') ? undefined : json['project'],
+    model: json['model'] == null ? undefined : json['model'],
+    project: json['project'] == null ? undefined : json['project'],
   };
 }
 
 export function ProjectOtherSettingsLabelMappingInnerToJSON(
   value?: ProjectOtherSettingsLabelMappingInner | null,
 ): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    model: value.model,
-    project: value.project,
+    model: value['model'],
+    project: value['project'],
   };
 }

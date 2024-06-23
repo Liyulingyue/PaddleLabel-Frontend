@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 import type { Task } from './Task';
 import { TaskFromJSON, TaskFromJSONTyped, TaskToJSON } from './Task';
 
@@ -75,10 +75,8 @@ export interface Data {
 /**
  * Check if a given object implements the Data interface.
  */
-export function instanceOfData(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfData(value: object): value is Data {
+  return true;
 }
 
 export function DataFromJSON(json: any): Data {
@@ -86,33 +84,30 @@ export function DataFromJSON(json: any): Data {
 }
 
 export function DataFromJSONTyped(json: any, ignoreDiscriminator: boolean): Data {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    dataId: !exists(json, 'data_id') ? undefined : json['data_id'],
-    taskId: !exists(json, 'task_id') ? undefined : json['task_id'],
-    size: !exists(json, 'size') ? undefined : json['size'],
-    task: !exists(json, 'task') ? undefined : TaskFromJSON(json['task']),
-    created: !exists(json, 'created') ? undefined : json['created'],
-    modified: !exists(json, 'modified') ? undefined : json['modified'],
-    sault: !exists(json, 'sault') ? undefined : json['sault'],
-    predicted: !exists(json, 'predicted') ? undefined : json['predicted'],
+    dataId: json['data_id'] == null ? undefined : json['data_id'],
+    taskId: json['task_id'] == null ? undefined : json['task_id'],
+    size: json['size'] == null ? undefined : json['size'],
+    task: json['task'] == null ? undefined : TaskFromJSON(json['task']),
+    created: json['created'] == null ? undefined : json['created'],
+    modified: json['modified'] == null ? undefined : json['modified'],
+    sault: json['sault'] == null ? undefined : json['sault'],
+    predicted: json['predicted'] == null ? undefined : json['predicted'],
   };
 }
 
-export function DataToJSON(value?: Data | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+export function DataToJSON(value?: Omit<Data, 'data_id' | 'created' | 'modified'> | null): any {
+  if (value == null) {
+    return value;
   }
   return {
-    task_id: value.taskId,
-    size: value.size,
-    task: TaskToJSON(value.task),
-    sault: value.sault,
-    predicted: value.predicted,
+    task_id: value['taskId'],
+    size: value['size'],
+    task: TaskToJSON(value['task']),
+    sault: value['sault'],
+    predicted: value['predicted'],
   };
 }

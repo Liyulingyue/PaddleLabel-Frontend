@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -30,10 +30,8 @@ export interface PredictRequestOther {
 /**
  * Check if a given object implements the PredictRequestOther interface.
  */
-export function instanceOfPredictRequestOther(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfPredictRequestOther(value: object): value is PredictRequestOther {
+  return true;
 }
 
 export function PredictRequestOtherFromJSON(json: any): PredictRequestOther {
@@ -44,22 +42,19 @@ export function PredictRequestOtherFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): PredictRequestOther {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    clicks: !exists(json, 'clicks') ? undefined : json['clicks'],
+    clicks: json['clicks'] == null ? undefined : json['clicks'],
   };
 }
 
 export function PredictRequestOtherToJSON(value?: PredictRequestOther | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    clicks: value.clicks,
+    clicks: value['clicks'],
   };
 }

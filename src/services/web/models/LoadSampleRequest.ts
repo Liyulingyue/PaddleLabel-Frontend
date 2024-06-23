@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -30,10 +30,8 @@ export interface LoadSampleRequest {
 /**
  * Check if a given object implements the LoadSampleRequest interface.
  */
-export function instanceOfLoadSampleRequest(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfLoadSampleRequest(value: object): value is LoadSampleRequest {
+  return true;
 }
 
 export function LoadSampleRequestFromJSON(json: any): LoadSampleRequest {
@@ -44,22 +42,19 @@ export function LoadSampleRequestFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): LoadSampleRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    taskCategoryId: !exists(json, 'task_category_id') ? undefined : json['task_category_id'],
+    taskCategoryId: json['task_category_id'] == null ? undefined : json['task_category_id'],
   };
 }
 
 export function LoadSampleRequestToJSON(value?: LoadSampleRequest | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    task_category_id: value.taskCategoryId,
+    task_category_id: value['taskCategoryId'],
   };
 }

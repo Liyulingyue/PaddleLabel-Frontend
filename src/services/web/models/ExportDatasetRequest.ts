@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -42,11 +42,9 @@ export interface ExportDatasetRequest {
 /**
  * Check if a given object implements the ExportDatasetRequest interface.
  */
-export function instanceOfExportDatasetRequest(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'exportDir' in value;
-
-  return isInstance;
+export function instanceOfExportDatasetRequest(value: object): value is ExportDatasetRequest {
+  if (!('exportDir' in value) || value['exportDir'] === undefined) return false;
+  return true;
 }
 
 export function ExportDatasetRequestFromJSON(json: any): ExportDatasetRequest {
@@ -57,26 +55,23 @@ export function ExportDatasetRequestFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): ExportDatasetRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
     exportDir: json['export_dir'],
-    exportFormat: !exists(json, 'export_format') ? undefined : json['export_format'],
-    segMaskType: !exists(json, 'seg_mask_type') ? undefined : json['seg_mask_type'],
+    exportFormat: json['export_format'] == null ? undefined : json['export_format'],
+    segMaskType: json['seg_mask_type'] == null ? undefined : json['seg_mask_type'],
   };
 }
 
 export function ExportDatasetRequestToJSON(value?: ExportDatasetRequest | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    export_dir: value.exportDir,
-    export_format: value.exportFormat,
-    seg_mask_type: value.segMaskType,
+    export_dir: value['exportDir'],
+    export_format: value['exportFormat'],
+    seg_mask_type: value['segMaskType'],
   };
 }

@@ -13,13 +13,13 @@
  */
 
 import * as runtime from '../runtime';
-import type { Label } from '../models';
-import { LabelFromJSON, LabelToJSON } from '../models';
+import type { Label } from '../models/index';
+import { LabelFromJSON, LabelToJSON } from '../models/index';
 
 export interface CreateRequest {
   label: Array<Label>;
   requestId?: number;
-  removeDuplicateByName?: boolean;
+  removeDuplicateByName?: string;
 }
 
 export interface GetRequest {
@@ -32,7 +32,7 @@ export interface RemoveRequest {
 
 export interface UpdateRequest {
   labelId: number;
-  label: Label;
+  label: Omit<Label, 'created' | 'modified'>;
 }
 
 /**
@@ -46,10 +46,10 @@ export class LabelApi extends runtime.BaseAPI {
     requestParameters: CreateRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Array<Label>>> {
-    if (requestParameters.label === null || requestParameters.label === undefined) {
+    if (requestParameters['label'] == null) {
       throw new runtime.RequiredError(
         'label',
-        'Required parameter requestParameters.label was null or undefined when calling create.',
+        'Required parameter "label" was null or undefined when calling create().',
       );
     }
 
@@ -59,16 +59,13 @@ export class LabelApi extends runtime.BaseAPI {
 
     headerParameters['Content-Type'] = 'application/json';
 
-    if (requestParameters.requestId !== undefined && requestParameters.requestId !== null) {
-      headerParameters['request_id'] = String(requestParameters.requestId);
+    if (requestParameters['requestId'] != null) {
+      headerParameters['request_id'] = String(requestParameters['requestId']);
     }
 
-    if (
-      requestParameters.removeDuplicateByName !== undefined &&
-      requestParameters.removeDuplicateByName !== null
-    ) {
+    if (requestParameters['removeDuplicateByName'] != null) {
       headerParameters['remove_duplicate_by_name'] = String(
-        requestParameters.removeDuplicateByName,
+        requestParameters['removeDuplicateByName'],
       );
     }
 
@@ -78,7 +75,7 @@ export class LabelApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: requestParameters.label.map(LabelToJSON),
+        body: requestParameters['label']!.map(LabelToJSON),
       },
       initOverrides,
     );
@@ -92,7 +89,7 @@ export class LabelApi extends runtime.BaseAPI {
   async create(
     label: Array<Label>,
     requestId?: number,
-    removeDuplicateByName?: boolean,
+    removeDuplicateByName?: string,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<Array<Label>> {
     const response = await this.createRaw(
@@ -109,10 +106,10 @@ export class LabelApi extends runtime.BaseAPI {
     requestParameters: GetRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Label>> {
-    if (requestParameters.labelId === null || requestParameters.labelId === undefined) {
+    if (requestParameters['labelId'] == null) {
       throw new runtime.RequiredError(
         'labelId',
-        'Required parameter requestParameters.labelId was null or undefined when calling get.',
+        'Required parameter "labelId" was null or undefined when calling get().',
       );
     }
 
@@ -124,7 +121,7 @@ export class LabelApi extends runtime.BaseAPI {
       {
         path: `/labels/{label_id}`.replace(
           `{${'label_id'}}`,
-          encodeURIComponent(String(requestParameters.labelId)),
+          encodeURIComponent(String(requestParameters['labelId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -186,10 +183,10 @@ export class LabelApi extends runtime.BaseAPI {
     requestParameters: RemoveRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.labelId === null || requestParameters.labelId === undefined) {
+    if (requestParameters['labelId'] == null) {
       throw new runtime.RequiredError(
         'labelId',
-        'Required parameter requestParameters.labelId was null or undefined when calling remove.',
+        'Required parameter "labelId" was null or undefined when calling remove().',
       );
     }
 
@@ -201,7 +198,7 @@ export class LabelApi extends runtime.BaseAPI {
       {
         path: `/labels/{label_id}`.replace(
           `{${'label_id'}}`,
-          encodeURIComponent(String(requestParameters.labelId)),
+          encodeURIComponent(String(requestParameters['labelId'])),
         ),
         method: 'DELETE',
         headers: headerParameters,
@@ -232,17 +229,17 @@ export class LabelApi extends runtime.BaseAPI {
     requestParameters: UpdateRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Label>> {
-    if (requestParameters.labelId === null || requestParameters.labelId === undefined) {
+    if (requestParameters['labelId'] == null) {
       throw new runtime.RequiredError(
         'labelId',
-        'Required parameter requestParameters.labelId was null or undefined when calling update.',
+        'Required parameter "labelId" was null or undefined when calling update().',
       );
     }
 
-    if (requestParameters.label === null || requestParameters.label === undefined) {
+    if (requestParameters['label'] == null) {
       throw new runtime.RequiredError(
         'label',
-        'Required parameter requestParameters.label was null or undefined when calling update.',
+        'Required parameter "label" was null or undefined when calling update().',
       );
     }
 
@@ -256,12 +253,12 @@ export class LabelApi extends runtime.BaseAPI {
       {
         path: `/labels/{label_id}`.replace(
           `{${'label_id'}}`,
-          encodeURIComponent(String(requestParameters.labelId)),
+          encodeURIComponent(String(requestParameters['labelId'])),
         ),
         method: 'PUT',
         headers: headerParameters,
         query: queryParameters,
-        body: LabelToJSON(requestParameters.label),
+        body: LabelToJSON(requestParameters['label']),
       },
       initOverrides,
     );

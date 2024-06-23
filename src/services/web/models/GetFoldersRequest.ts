@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -30,10 +30,8 @@ export interface GetFoldersRequest {
 /**
  * Check if a given object implements the GetFoldersRequest interface.
  */
-export function instanceOfGetFoldersRequest(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfGetFoldersRequest(value: object): value is GetFoldersRequest {
+  return true;
 }
 
 export function GetFoldersRequestFromJSON(json: any): GetFoldersRequest {
@@ -44,22 +42,19 @@ export function GetFoldersRequestFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): GetFoldersRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    path: !exists(json, 'path') ? undefined : json['path'],
+    path: json['path'] == null ? undefined : json['path'],
   };
 }
 
 export function GetFoldersRequestToJSON(value?: GetFoldersRequest | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    path: value.path,
+    path: value['path'],
   };
 }

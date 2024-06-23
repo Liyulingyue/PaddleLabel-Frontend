@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -66,15 +66,13 @@ export interface ImportOption {
 /**
  * Check if a given object implements the ImportOption interface.
  */
-export function instanceOfImportOption(value: object): boolean {
-  let isInstance = true;
-  isInstance = isInstance && 'label' in value;
-  isInstance = isInstance && 'required' in value;
-  isInstance = isInstance && 'type' in value;
-  isInstance = isInstance && 'showAfter' in value;
-  isInstance = isInstance && 'allowEdit' in value;
-
-  return isInstance;
+export function instanceOfImportOption(value: object): value is ImportOption {
+  if (!('label' in value) || value['label'] === undefined) return false;
+  if (!('required' in value) || value['required'] === undefined) return false;
+  if (!('type' in value) || value['type'] === undefined) return false;
+  if (!('showAfter' in value) || value['showAfter'] === undefined) return false;
+  if (!('allowEdit' in value) || value['allowEdit'] === undefined) return false;
+  return true;
 }
 
 export function ImportOptionFromJSON(json: any): ImportOption {
@@ -82,34 +80,31 @@ export function ImportOptionFromJSON(json: any): ImportOption {
 }
 
 export function ImportOptionFromJSONTyped(json: any, ignoreDiscriminator: boolean): ImportOption {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
     label: json['label'],
     required: json['required'],
     type: json['type'],
-    choices: !exists(json, 'choices') ? undefined : json['choices'],
-    tips: !exists(json, 'tips') ? undefined : json['tips'],
+    choices: json['choices'] == null ? undefined : json['choices'],
+    tips: json['tips'] == null ? undefined : json['tips'],
     showAfter: json['show_after'],
     allowEdit: json['allow_edit'],
   };
 }
 
 export function ImportOptionToJSON(value?: ImportOption | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    label: value.label,
-    required: value.required,
-    type: value.type,
-    choices: value.choices,
-    tips: value.tips,
-    show_after: value.showAfter,
-    allow_edit: value.allowEdit,
+    label: value['label'],
+    required: value['required'],
+    type: value['type'],
+    choices: value['choices'],
+    tips: value['tips'],
+    show_after: value['showAfter'],
+    allow_edit: value['allowEdit'],
   };
 }

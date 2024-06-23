@@ -13,8 +13,8 @@
  */
 
 import * as runtime from '../runtime';
-import type { Tag } from '../models';
-import { TagFromJSON, TagToJSON } from '../models';
+import type { Tag } from '../models/index';
+import { TagFromJSON, TagToJSON } from '../models/index';
 
 export interface CreateRequest {
   tag: Tag;
@@ -46,10 +46,10 @@ export class TagApi extends runtime.BaseAPI {
     requestParameters: CreateRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Tag>> {
-    if (requestParameters.tag === null || requestParameters.tag === undefined) {
+    if (requestParameters['tag'] == null) {
       throw new runtime.RequiredError(
         'tag',
-        'Required parameter requestParameters.tag was null or undefined when calling create.',
+        'Required parameter "tag" was null or undefined when calling create().',
       );
     }
 
@@ -59,8 +59,8 @@ export class TagApi extends runtime.BaseAPI {
 
     headerParameters['Content-Type'] = 'application/json';
 
-    if (requestParameters.requestId !== undefined && requestParameters.requestId !== null) {
-      headerParameters['request_id'] = String(requestParameters.requestId);
+    if (requestParameters['requestId'] != null) {
+      headerParameters['request_id'] = String(requestParameters['requestId']);
     }
 
     const response = await this.request(
@@ -69,7 +69,7 @@ export class TagApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: TagToJSON(requestParameters.tag),
+        body: TagToJSON(requestParameters['tag']),
       },
       initOverrides,
     );
@@ -97,10 +97,10 @@ export class TagApi extends runtime.BaseAPI {
     requestParameters: GetRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Tag>> {
-    if (requestParameters.tagId === null || requestParameters.tagId === undefined) {
+    if (requestParameters['tagId'] == null) {
       throw new runtime.RequiredError(
         'tagId',
-        'Required parameter requestParameters.tagId was null or undefined when calling get.',
+        'Required parameter "tagId" was null or undefined when calling get().',
       );
     }
 
@@ -112,7 +112,7 @@ export class TagApi extends runtime.BaseAPI {
       {
         path: `/tags/{tag_id}`.replace(
           `{${'tag_id'}}`,
-          encodeURIComponent(String(requestParameters.tagId)),
+          encodeURIComponent(String(requestParameters['tagId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -174,10 +174,10 @@ export class TagApi extends runtime.BaseAPI {
     requestParameters: RemoveRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.tagId === null || requestParameters.tagId === undefined) {
+    if (requestParameters['tagId'] == null) {
       throw new runtime.RequiredError(
         'tagId',
-        'Required parameter requestParameters.tagId was null or undefined when calling remove.',
+        'Required parameter "tagId" was null or undefined when calling remove().',
       );
     }
 
@@ -189,7 +189,7 @@ export class TagApi extends runtime.BaseAPI {
       {
         path: `/tags/{tag_id}`.replace(
           `{${'tag_id'}}`,
-          encodeURIComponent(String(requestParameters.tagId)),
+          encodeURIComponent(String(requestParameters['tagId'])),
         ),
         method: 'DELETE',
         headers: headerParameters,
@@ -220,17 +220,17 @@ export class TagApi extends runtime.BaseAPI {
     requestParameters: UpdateRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Tag>> {
-    if (requestParameters.tagId === null || requestParameters.tagId === undefined) {
+    if (requestParameters['tagId'] == null) {
       throw new runtime.RequiredError(
         'tagId',
-        'Required parameter requestParameters.tagId was null or undefined when calling update.',
+        'Required parameter "tagId" was null or undefined when calling update().',
       );
     }
 
-    if (requestParameters.tag === null || requestParameters.tag === undefined) {
+    if (requestParameters['tag'] == null) {
       throw new runtime.RequiredError(
         'tag',
-        'Required parameter requestParameters.tag was null or undefined when calling update.',
+        'Required parameter "tag" was null or undefined when calling update().',
       );
     }
 
@@ -244,12 +244,12 @@ export class TagApi extends runtime.BaseAPI {
       {
         path: `/tags/{tag_id}`.replace(
           `{${'tag_id'}}`,
-          encodeURIComponent(String(requestParameters.tagId)),
+          encodeURIComponent(String(requestParameters['tagId'])),
         ),
         method: 'PUT',
         headers: headerParameters,
         query: queryParameters,
-        body: TagToJSON(requestParameters.tag),
+        body: TagToJSON(requestParameters['tag']),
       },
       initOverrides,
     );

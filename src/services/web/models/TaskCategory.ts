@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -55,10 +55,8 @@ export interface TaskCategory {
 /**
  * Check if a given object implements the TaskCategory interface.
  */
-export function instanceOfTaskCategory(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfTaskCategory(value: object): value is TaskCategory {
+  return true;
 }
 
 export function TaskCategoryFromJSON(json: any): TaskCategory {
@@ -66,30 +64,27 @@ export function TaskCategoryFromJSON(json: any): TaskCategory {
 }
 
 export function TaskCategoryFromJSONTyped(json: any, ignoreDiscriminator: boolean): TaskCategory {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    name: !exists(json, 'name') ? undefined : json['name'],
-    taskCategoryId: !exists(json, 'task_category_id') ? undefined : json['task_category_id'],
-    handler: !exists(json, 'handler') ? undefined : json['handler'],
-    created: !exists(json, 'created') ? undefined : json['created'],
-    modified: !exists(json, 'modified') ? undefined : json['modified'],
+    name: json['name'] == null ? undefined : json['name'],
+    taskCategoryId: json['task_category_id'] == null ? undefined : json['task_category_id'],
+    handler: json['handler'] == null ? undefined : json['handler'],
+    created: json['created'] == null ? undefined : json['created'],
+    modified: json['modified'] == null ? undefined : json['modified'],
   };
 }
 
 export function TaskCategoryToJSON(value?: TaskCategory | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    name: value.name,
-    task_category_id: value.taskCategoryId,
-    handler: value.handler,
-    created: value.created,
-    modified: value.modified,
+    name: value['name'],
+    task_category_id: value['taskCategoryId'],
+    handler: value['handler'],
+    created: value['created'],
+    modified: value['modified'],
   };
 }

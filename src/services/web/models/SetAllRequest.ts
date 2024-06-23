@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -30,10 +30,8 @@ export interface SetAllRequest {
 /**
  * Check if a given object implements the SetAllRequest interface.
  */
-export function instanceOfSetAllRequest(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfSetAllRequest(value: object): value is SetAllRequest {
+  return true;
 }
 
 export function SetAllRequestFromJSON(json: any): SetAllRequest {
@@ -41,22 +39,19 @@ export function SetAllRequestFromJSON(json: any): SetAllRequest {
 }
 
 export function SetAllRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): SetAllRequest {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    dataPredicted: !exists(json, 'data_predicted') ? undefined : json['data_predicted'],
+    dataPredicted: json['data_predicted'] == null ? undefined : json['data_predicted'],
   };
 }
 
 export function SetAllRequestToJSON(value?: SetAllRequest | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    data_predicted: value.dataPredicted,
+    data_predicted: value['dataPredicted'],
   };
 }

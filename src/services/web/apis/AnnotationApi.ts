@@ -13,8 +13,8 @@
  */
 
 import * as runtime from '../runtime';
-import type { Annotation } from '../models';
-import { AnnotationFromJSON, AnnotationToJSON } from '../models';
+import type { Annotation } from '../models/index';
+import { AnnotationFromJSON, AnnotationToJSON } from '../models/index';
 
 export interface CreateRequest {
   annotation: Array<Annotation>;
@@ -27,12 +27,12 @@ export interface GetRequest {
 }
 
 export interface RemoveRequest {
-  annotationId: number;
+  annotationId: string;
 }
 
 export interface UpdateRequest {
-  annotationId: number;
-  annotation: Annotation;
+  annotationId: string;
+  annotation: Omit<Annotation, 'created' | 'modified'>;
 }
 
 /**
@@ -46,10 +46,10 @@ export class AnnotationApi extends runtime.BaseAPI {
     requestParameters: CreateRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Array<Annotation>>> {
-    if (requestParameters.annotation === null || requestParameters.annotation === undefined) {
+    if (requestParameters['annotation'] == null) {
       throw new runtime.RequiredError(
         'annotation',
-        'Required parameter requestParameters.annotation was null or undefined when calling create.',
+        'Required parameter "annotation" was null or undefined when calling create().',
       );
     }
 
@@ -59,12 +59,12 @@ export class AnnotationApi extends runtime.BaseAPI {
 
     headerParameters['Content-Type'] = 'application/json';
 
-    if (requestParameters.requestId !== undefined && requestParameters.requestId !== null) {
-      headerParameters['request_id'] = String(requestParameters.requestId);
+    if (requestParameters['requestId'] != null) {
+      headerParameters['request_id'] = String(requestParameters['requestId']);
     }
 
-    if (requestParameters.deduplicate !== undefined && requestParameters.deduplicate !== null) {
-      headerParameters['deduplicate'] = String(requestParameters.deduplicate);
+    if (requestParameters['deduplicate'] != null) {
+      headerParameters['deduplicate'] = String(requestParameters['deduplicate']);
     }
 
     const response = await this.request(
@@ -73,7 +73,7 @@ export class AnnotationApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: requestParameters.annotation.map(AnnotationToJSON),
+        body: requestParameters['annotation']!.map(AnnotationToJSON),
       },
       initOverrides,
     );
@@ -104,10 +104,10 @@ export class AnnotationApi extends runtime.BaseAPI {
     requestParameters: GetRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Annotation>> {
-    if (requestParameters.annotationId === null || requestParameters.annotationId === undefined) {
+    if (requestParameters['annotationId'] == null) {
       throw new runtime.RequiredError(
         'annotationId',
-        'Required parameter requestParameters.annotationId was null or undefined when calling get.',
+        'Required parameter "annotationId" was null or undefined when calling get().',
       );
     }
 
@@ -119,7 +119,7 @@ export class AnnotationApi extends runtime.BaseAPI {
       {
         path: `/annotations/{annotation_id}`.replace(
           `{${'annotation_id'}}`,
-          encodeURIComponent(String(requestParameters.annotationId)),
+          encodeURIComponent(String(requestParameters['annotationId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -183,10 +183,10 @@ export class AnnotationApi extends runtime.BaseAPI {
     requestParameters: RemoveRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.annotationId === null || requestParameters.annotationId === undefined) {
+    if (requestParameters['annotationId'] == null) {
       throw new runtime.RequiredError(
         'annotationId',
-        'Required parameter requestParameters.annotationId was null or undefined when calling remove.',
+        'Required parameter "annotationId" was null or undefined when calling remove().',
       );
     }
 
@@ -198,7 +198,7 @@ export class AnnotationApi extends runtime.BaseAPI {
       {
         path: `/annotations/{annotation_id}`.replace(
           `{${'annotation_id'}}`,
-          encodeURIComponent(String(requestParameters.annotationId)),
+          encodeURIComponent(String(requestParameters['annotationId'])),
         ),
         method: 'DELETE',
         headers: headerParameters,
@@ -215,7 +215,7 @@ export class AnnotationApi extends runtime.BaseAPI {
    * Delete an annotation
    */
   async remove(
-    annotationId: number,
+    annotationId: string,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<void> {
     await this.removeRaw({ annotationId: annotationId }, initOverrides);
@@ -229,17 +229,17 @@ export class AnnotationApi extends runtime.BaseAPI {
     requestParameters: UpdateRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Annotation>> {
-    if (requestParameters.annotationId === null || requestParameters.annotationId === undefined) {
+    if (requestParameters['annotationId'] == null) {
       throw new runtime.RequiredError(
         'annotationId',
-        'Required parameter requestParameters.annotationId was null or undefined when calling update.',
+        'Required parameter "annotationId" was null or undefined when calling update().',
       );
     }
 
-    if (requestParameters.annotation === null || requestParameters.annotation === undefined) {
+    if (requestParameters['annotation'] == null) {
       throw new runtime.RequiredError(
         'annotation',
-        'Required parameter requestParameters.annotation was null or undefined when calling update.',
+        'Required parameter "annotation" was null or undefined when calling update().',
       );
     }
 
@@ -253,12 +253,12 @@ export class AnnotationApi extends runtime.BaseAPI {
       {
         path: `/annotations/{annotation_id}`.replace(
           `{${'annotation_id'}}`,
-          encodeURIComponent(String(requestParameters.annotationId)),
+          encodeURIComponent(String(requestParameters['annotationId'])),
         ),
         method: 'PUT',
         headers: headerParameters,
         query: queryParameters,
-        body: AnnotationToJSON(requestParameters.annotation),
+        body: AnnotationToJSON(requestParameters['annotation']),
       },
       initOverrides,
     );
@@ -271,7 +271,7 @@ export class AnnotationApi extends runtime.BaseAPI {
    * Edit annotation
    */
   async update(
-    annotationId: number,
+    annotationId: string,
     annotation: Annotation,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<Annotation> {

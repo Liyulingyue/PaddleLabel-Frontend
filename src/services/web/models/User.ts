@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -54,10 +54,8 @@ export interface User {
 /**
  * Check if a given object implements the User interface.
  */
-export function instanceOfUser(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfUser(value: object): value is User {
+  return true;
 }
 
 export function UserFromJSON(json: any): User {
@@ -65,29 +63,26 @@ export function UserFromJSON(json: any): User {
 }
 
 export function UserFromJSONTyped(json: any, ignoreDiscriminator: boolean): User {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    userId: !exists(json, 'user_id') ? undefined : json['user_id'],
-    name: !exists(json, 'name') ? undefined : json['name'],
-    email: !exists(json, 'email') ? undefined : json['email'],
-    password: !exists(json, 'password') ? undefined : json['password'],
-    roleId: !exists(json, 'role_id') ? undefined : json['role_id'],
+    userId: json['user_id'] == null ? undefined : json['user_id'],
+    name: json['name'] == null ? undefined : json['name'],
+    email: json['email'] == null ? undefined : json['email'],
+    password: json['password'] == null ? undefined : json['password'],
+    roleId: json['role_id'] == null ? undefined : json['role_id'],
   };
 }
 
-export function UserToJSON(value?: User | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+export function UserToJSON(value?: Omit<User, 'user_id'> | null): any {
+  if (value == null) {
+    return value;
   }
   return {
-    name: value.name,
-    email: value.email,
-    password: value.password,
-    role_id: value.roleId,
+    name: value['name'],
+    email: value['email'],
+    password: value['password'],
+    role_id: value['roleId'],
   };
 }

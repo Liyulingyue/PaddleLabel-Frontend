@@ -13,11 +13,11 @@
  */
 
 import * as runtime from '../runtime';
-import type { Annotation, Data } from '../models';
-import { AnnotationFromJSON, AnnotationToJSON, DataFromJSON, DataToJSON } from '../models';
+import type { Annotation, Data } from '../models/index';
+import { AnnotationFromJSON, AnnotationToJSON, DataFromJSON, DataToJSON } from '../models/index';
 
 export interface CreateRequest {
-  data: Data;
+  data: Omit<Data, 'data_id' | 'created' | 'modified'>;
 }
 
 export interface DeleteAnnotationsRequest {
@@ -52,7 +52,7 @@ export interface SetAnnotationsRequest {
 
 export interface UpdateRequest {
   dataId: number;
-  data: Data;
+  data: Omit<Data, 'data_id' | 'created' | 'modified'>;
 }
 
 /**
@@ -66,10 +66,10 @@ export class DataApi extends runtime.BaseAPI {
     requestParameters: CreateRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Data>> {
-    if (requestParameters.data === null || requestParameters.data === undefined) {
+    if (requestParameters['data'] == null) {
       throw new runtime.RequiredError(
         'data',
-        'Required parameter requestParameters.data was null or undefined when calling create.',
+        'Required parameter "data" was null or undefined when calling create().',
       );
     }
 
@@ -85,7 +85,7 @@ export class DataApi extends runtime.BaseAPI {
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: DataToJSON(requestParameters.data),
+        body: DataToJSON(requestParameters['data']),
       },
       initOverrides,
     );
@@ -111,10 +111,10 @@ export class DataApi extends runtime.BaseAPI {
     requestParameters: DeleteAnnotationsRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.dataId === null || requestParameters.dataId === undefined) {
+    if (requestParameters['dataId'] == null) {
       throw new runtime.RequiredError(
         'dataId',
-        'Required parameter requestParameters.dataId was null or undefined when calling deleteAnnotations.',
+        'Required parameter "dataId" was null or undefined when calling deleteAnnotations().',
       );
     }
 
@@ -126,7 +126,7 @@ export class DataApi extends runtime.BaseAPI {
       {
         path: `/datas/{data_id}/annotations`.replace(
           `{${'data_id'}}`,
-          encodeURIComponent(String(requestParameters.dataId)),
+          encodeURIComponent(String(requestParameters['dataId'])),
         ),
         method: 'DELETE',
         headers: headerParameters,
@@ -155,10 +155,10 @@ export class DataApi extends runtime.BaseAPI {
     requestParameters: GetRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Data>> {
-    if (requestParameters.dataId === null || requestParameters.dataId === undefined) {
+    if (requestParameters['dataId'] == null) {
       throw new runtime.RequiredError(
         'dataId',
-        'Required parameter requestParameters.dataId was null or undefined when calling get.',
+        'Required parameter "dataId" was null or undefined when calling get().',
       );
     }
 
@@ -170,7 +170,7 @@ export class DataApi extends runtime.BaseAPI {
       {
         path: `/datas/{data_id}/`.replace(
           `{${'data_id'}}`,
-          encodeURIComponent(String(requestParameters.dataId)),
+          encodeURIComponent(String(requestParameters['dataId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -231,10 +231,10 @@ export class DataApi extends runtime.BaseAPI {
     requestParameters: GetAnnotationsRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Array<Annotation>>> {
-    if (requestParameters.dataId === null || requestParameters.dataId === undefined) {
+    if (requestParameters['dataId'] == null) {
       throw new runtime.RequiredError(
         'dataId',
-        'Required parameter requestParameters.dataId was null or undefined when calling getAnnotations.',
+        'Required parameter "dataId" was null or undefined when calling getAnnotations().',
       );
     }
 
@@ -246,7 +246,7 @@ export class DataApi extends runtime.BaseAPI {
       {
         path: `/datas/{data_id}/annotations`.replace(
           `{${'data_id'}}`,
-          encodeURIComponent(String(requestParameters.dataId)),
+          encodeURIComponent(String(requestParameters['dataId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -276,17 +276,17 @@ export class DataApi extends runtime.BaseAPI {
     requestParameters: GetImageRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.dataId === null || requestParameters.dataId === undefined) {
+    if (requestParameters['dataId'] == null) {
       throw new runtime.RequiredError(
         'dataId',
-        'Required parameter requestParameters.dataId was null or undefined when calling getImage.',
+        'Required parameter "dataId" was null or undefined when calling getImage().',
       );
     }
 
     const queryParameters: any = {};
 
-    if (requestParameters.sault !== undefined) {
-      queryParameters['sault'] = requestParameters.sault;
+    if (requestParameters['sault'] != null) {
+      queryParameters['sault'] = requestParameters['sault'];
     }
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -295,7 +295,7 @@ export class DataApi extends runtime.BaseAPI {
       {
         path: `/datas/{data_id}/image`.replace(
           `{${'data_id'}}`,
-          encodeURIComponent(String(requestParameters.dataId)),
+          encodeURIComponent(String(requestParameters['dataId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -325,10 +325,10 @@ export class DataApi extends runtime.BaseAPI {
     requestParameters: GetMaskRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.dataId === null || requestParameters.dataId === undefined) {
+    if (requestParameters['dataId'] == null) {
       throw new runtime.RequiredError(
         'dataId',
-        'Required parameter requestParameters.dataId was null or undefined when calling getMask.',
+        'Required parameter "dataId" was null or undefined when calling getMask().',
       );
     }
 
@@ -340,7 +340,7 @@ export class DataApi extends runtime.BaseAPI {
       {
         path: `/datas/{data_id}/mask`.replace(
           `{${'data_id'}}`,
-          encodeURIComponent(String(requestParameters.dataId)),
+          encodeURIComponent(String(requestParameters['dataId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -370,10 +370,10 @@ export class DataApi extends runtime.BaseAPI {
     requestParameters: RemoveRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.dataId === null || requestParameters.dataId === undefined) {
+    if (requestParameters['dataId'] == null) {
       throw new runtime.RequiredError(
         'dataId',
-        'Required parameter requestParameters.dataId was null or undefined when calling remove.',
+        'Required parameter "dataId" was null or undefined when calling remove().',
       );
     }
 
@@ -385,7 +385,7 @@ export class DataApi extends runtime.BaseAPI {
       {
         path: `/datas/{data_id}/`.replace(
           `{${'data_id'}}`,
-          encodeURIComponent(String(requestParameters.dataId)),
+          encodeURIComponent(String(requestParameters['dataId'])),
         ),
         method: 'DELETE',
         headers: headerParameters,
@@ -415,10 +415,10 @@ export class DataApi extends runtime.BaseAPI {
     requestParameters: SetAnnotationsRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Array<Annotation>>> {
-    if (requestParameters.dataId === null || requestParameters.dataId === undefined) {
+    if (requestParameters['dataId'] == null) {
       throw new runtime.RequiredError(
         'dataId',
-        'Required parameter requestParameters.dataId was null or undefined when calling setAnnotations.',
+        'Required parameter "dataId" was null or undefined when calling setAnnotations().',
       );
     }
 
@@ -432,12 +432,12 @@ export class DataApi extends runtime.BaseAPI {
       {
         path: `/datas/{data_id}/annotations`.replace(
           `{${'data_id'}}`,
-          encodeURIComponent(String(requestParameters.dataId)),
+          encodeURIComponent(String(requestParameters['dataId'])),
         ),
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: requestParameters.annotation.map(AnnotationToJSON),
+        body: requestParameters['annotation']!.map(AnnotationToJSON),
       },
       initOverrides,
     );
@@ -468,17 +468,17 @@ export class DataApi extends runtime.BaseAPI {
     requestParameters: UpdateRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Data>> {
-    if (requestParameters.dataId === null || requestParameters.dataId === undefined) {
+    if (requestParameters['dataId'] == null) {
       throw new runtime.RequiredError(
         'dataId',
-        'Required parameter requestParameters.dataId was null or undefined when calling update.',
+        'Required parameter "dataId" was null or undefined when calling update().',
       );
     }
 
-    if (requestParameters.data === null || requestParameters.data === undefined) {
+    if (requestParameters['data'] == null) {
       throw new runtime.RequiredError(
         'data',
-        'Required parameter requestParameters.data was null or undefined when calling update.',
+        'Required parameter "data" was null or undefined when calling update().',
       );
     }
 
@@ -492,12 +492,12 @@ export class DataApi extends runtime.BaseAPI {
       {
         path: `/datas/{data_id}/`.replace(
           `{${'data_id'}}`,
-          encodeURIComponent(String(requestParameters.dataId)),
+          encodeURIComponent(String(requestParameters['dataId'])),
         ),
         method: 'PUT',
         headers: headerParameters,
         query: queryParameters,
-        body: DataToJSON(requestParameters.data),
+        body: DataToJSON(requestParameters['data']),
       },
       initOverrides,
     );

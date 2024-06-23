@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -36,10 +36,10 @@ export interface ProjectOtherSettingsModelSettingsValue {
 /**
  * Check if a given object implements the ProjectOtherSettingsModelSettingsValue interface.
  */
-export function instanceOfProjectOtherSettingsModelSettingsValue(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfProjectOtherSettingsModelSettingsValue(
+  value: object,
+): value is ProjectOtherSettingsModelSettingsValue {
+  return true;
 }
 
 export function ProjectOtherSettingsModelSettingsValueFromJSON(
@@ -52,26 +52,23 @@ export function ProjectOtherSettingsModelSettingsValueFromJSONTyped(
   json: any,
   ignoreDiscriminator: boolean,
 ): ProjectOtherSettingsModelSettingsValue {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    modelFilePath: !exists(json, 'modelFilePath') ? undefined : json['modelFilePath'],
-    paramFilePath: !exists(json, 'paramFilePath') ? undefined : json['paramFilePath'],
+    modelFilePath: json['modelFilePath'] == null ? undefined : json['modelFilePath'],
+    paramFilePath: json['paramFilePath'] == null ? undefined : json['paramFilePath'],
   };
 }
 
 export function ProjectOtherSettingsModelSettingsValueToJSON(
   value?: ProjectOtherSettingsModelSettingsValue | null,
 ): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    modelFilePath: value.modelFilePath,
-    paramFilePath: value.paramFilePath,
+    modelFilePath: value['modelFilePath'],
+    paramFilePath: value['paramFilePath'],
   };
 }

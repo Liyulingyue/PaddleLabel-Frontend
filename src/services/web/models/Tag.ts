@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { exists, mapValues } from '../runtime';
+import { mapValues } from '../runtime';
 /**
  *
  * @export
@@ -54,10 +54,8 @@ export interface Tag {
 /**
  * Check if a given object implements the Tag interface.
  */
-export function instanceOfTag(value: object): boolean {
-  let isInstance = true;
-
-  return isInstance;
+export function instanceOfTag(value: object): value is Tag {
+  return true;
 }
 
 export function TagFromJSON(json: any): Tag {
@@ -65,30 +63,27 @@ export function TagFromJSON(json: any): Tag {
 }
 
 export function TagFromJSONTyped(json: any, ignoreDiscriminator: boolean): Tag {
-  if (json === undefined || json === null) {
+  if (json == null) {
     return json;
   }
   return {
-    tagId: !exists(json, 'tag_id') ? undefined : json['tag_id'],
-    projectId: !exists(json, 'project_id') ? undefined : json['project_id'],
-    name: !exists(json, 'name') ? undefined : json['name'],
-    color: !exists(json, 'color') ? undefined : json['color'],
-    comment: !exists(json, 'comment') ? undefined : json['comment'],
+    tagId: json['tag_id'] == null ? undefined : json['tag_id'],
+    projectId: json['project_id'] == null ? undefined : json['project_id'],
+    name: json['name'] == null ? undefined : json['name'],
+    color: json['color'] == null ? undefined : json['color'],
+    comment: json['comment'] == null ? undefined : json['comment'],
   };
 }
 
 export function TagToJSON(value?: Tag | null): any {
-  if (value === undefined) {
-    return undefined;
-  }
-  if (value === null) {
-    return null;
+  if (value == null) {
+    return value;
   }
   return {
-    tag_id: value.tagId,
-    project_id: value.projectId,
-    name: value.name,
-    color: value.color,
-    comment: value.comment,
+    tag_id: value['tagId'],
+    project_id: value['projectId'],
+    name: value['name'],
+    color: value['color'],
+    comment: value['comment'],
   };
 }

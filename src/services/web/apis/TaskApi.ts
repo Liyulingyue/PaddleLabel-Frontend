@@ -13,7 +13,7 @@
  */
 
 import * as runtime from '../runtime';
-import type { AddTagRequest, Annotation, Data, Tag, Task } from '../models';
+import type { AddTagRequest, Annotation, Data, Tag, Task } from '../models/index';
 import {
   AddTagRequestFromJSON,
   AddTagRequestToJSON,
@@ -25,7 +25,7 @@ import {
   TagToJSON,
   TaskFromJSON,
   TaskToJSON,
-} from '../models';
+} from '../models/index';
 
 export interface AddTagOperationRequest {
   taskId: number;
@@ -59,7 +59,7 @@ export interface RemoveRequest {
 
 export interface UpdateRequest {
   taskId: number;
-  task: Task;
+  task: Omit<Task, 'task_id' | 'modified' | 'created'>;
 }
 
 /**
@@ -74,10 +74,10 @@ export class TaskApi extends runtime.BaseAPI {
     requestParameters: AddTagOperationRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Array<Tag>>> {
-    if (requestParameters.taskId === null || requestParameters.taskId === undefined) {
+    if (requestParameters['taskId'] == null) {
       throw new runtime.RequiredError(
         'taskId',
-        'Required parameter requestParameters.taskId was null or undefined when calling addTag.',
+        'Required parameter "taskId" was null or undefined when calling addTag().',
       );
     }
 
@@ -87,20 +87,20 @@ export class TaskApi extends runtime.BaseAPI {
 
     headerParameters['Content-Type'] = 'application/json';
 
-    if (requestParameters.requestId !== undefined && requestParameters.requestId !== null) {
-      headerParameters['request_id'] = String(requestParameters.requestId);
+    if (requestParameters['requestId'] != null) {
+      headerParameters['request_id'] = String(requestParameters['requestId']);
     }
 
     const response = await this.request(
       {
         path: `/tasks/{task_id}/tags`.replace(
           `{${'task_id'}}`,
-          encodeURIComponent(String(requestParameters.taskId)),
+          encodeURIComponent(String(requestParameters['taskId'])),
         ),
         method: 'POST',
         headers: headerParameters,
         query: queryParameters,
-        body: AddTagRequestToJSON(requestParameters.addTagRequest),
+        body: AddTagRequestToJSON(requestParameters['addTagRequest']),
       },
       initOverrides,
     );
@@ -163,10 +163,10 @@ export class TaskApi extends runtime.BaseAPI {
     requestParameters: GetRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Task>> {
-    if (requestParameters.taskId === null || requestParameters.taskId === undefined) {
+    if (requestParameters['taskId'] == null) {
       throw new runtime.RequiredError(
         'taskId',
-        'Required parameter requestParameters.taskId was null or undefined when calling get.',
+        'Required parameter "taskId" was null or undefined when calling get().',
       );
     }
 
@@ -178,7 +178,7 @@ export class TaskApi extends runtime.BaseAPI {
       {
         path: `/tasks/{task_id}`.replace(
           `{${'task_id'}}`,
-          encodeURIComponent(String(requestParameters.taskId)),
+          encodeURIComponent(String(requestParameters['taskId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -210,8 +210,8 @@ export class TaskApi extends runtime.BaseAPI {
   ): Promise<runtime.ApiResponse<Array<Task>>> {
     const queryParameters: any = {};
 
-    if (requestParameters.orderBy !== undefined) {
-      queryParameters['order_by'] = requestParameters.orderBy;
+    if (requestParameters['orderBy'] != null) {
+      queryParameters['order_by'] = requestParameters['orderBy'];
     }
 
     const headerParameters: runtime.HTTPHeaders = {};
@@ -248,10 +248,10 @@ export class TaskApi extends runtime.BaseAPI {
     requestParameters: GetAnnotationsRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Array<Annotation>>> {
-    if (requestParameters.taskId === null || requestParameters.taskId === undefined) {
+    if (requestParameters['taskId'] == null) {
       throw new runtime.RequiredError(
         'taskId',
-        'Required parameter requestParameters.taskId was null or undefined when calling getAnnotations.',
+        'Required parameter "taskId" was null or undefined when calling getAnnotations().',
       );
     }
 
@@ -263,7 +263,7 @@ export class TaskApi extends runtime.BaseAPI {
       {
         path: `/tasks/{task_id}/annotations`.replace(
           `{${'task_id'}}`,
-          encodeURIComponent(String(requestParameters.taskId)),
+          encodeURIComponent(String(requestParameters['taskId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -295,10 +295,10 @@ export class TaskApi extends runtime.BaseAPI {
     requestParameters: GetDatasRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Array<Data>>> {
-    if (requestParameters.taskId === null || requestParameters.taskId === undefined) {
+    if (requestParameters['taskId'] == null) {
       throw new runtime.RequiredError(
         'taskId',
-        'Required parameter requestParameters.taskId was null or undefined when calling getDatas.',
+        'Required parameter "taskId" was null or undefined when calling getDatas().',
       );
     }
 
@@ -310,7 +310,7 @@ export class TaskApi extends runtime.BaseAPI {
       {
         path: `/tasks/{task_id}/datas`.replace(
           `{${'task_id'}}`,
-          encodeURIComponent(String(requestParameters.taskId)),
+          encodeURIComponent(String(requestParameters['taskId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -342,10 +342,10 @@ export class TaskApi extends runtime.BaseAPI {
     requestParameters: GetTagsRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Array<Tag>>> {
-    if (requestParameters.taskId === null || requestParameters.taskId === undefined) {
+    if (requestParameters['taskId'] == null) {
       throw new runtime.RequiredError(
         'taskId',
-        'Required parameter requestParameters.taskId was null or undefined when calling getTags.',
+        'Required parameter "taskId" was null or undefined when calling getTags().',
       );
     }
 
@@ -357,7 +357,7 @@ export class TaskApi extends runtime.BaseAPI {
       {
         path: `/tasks/{task_id}/tags`.replace(
           `{${'task_id'}}`,
-          encodeURIComponent(String(requestParameters.taskId)),
+          encodeURIComponent(String(requestParameters['taskId'])),
         ),
         method: 'GET',
         headers: headerParameters,
@@ -389,10 +389,10 @@ export class TaskApi extends runtime.BaseAPI {
     requestParameters: RemoveRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<void>> {
-    if (requestParameters.taskId === null || requestParameters.taskId === undefined) {
+    if (requestParameters['taskId'] == null) {
       throw new runtime.RequiredError(
         'taskId',
-        'Required parameter requestParameters.taskId was null or undefined when calling remove.',
+        'Required parameter "taskId" was null or undefined when calling remove().',
       );
     }
 
@@ -404,7 +404,7 @@ export class TaskApi extends runtime.BaseAPI {
       {
         path: `/tasks/{task_id}`.replace(
           `{${'task_id'}}`,
-          encodeURIComponent(String(requestParameters.taskId)),
+          encodeURIComponent(String(requestParameters['taskId'])),
         ),
         method: 'DELETE',
         headers: headerParameters,
@@ -435,17 +435,17 @@ export class TaskApi extends runtime.BaseAPI {
     requestParameters: UpdateRequest,
     initOverrides?: RequestInit | runtime.InitOverrideFunction,
   ): Promise<runtime.ApiResponse<Task>> {
-    if (requestParameters.taskId === null || requestParameters.taskId === undefined) {
+    if (requestParameters['taskId'] == null) {
       throw new runtime.RequiredError(
         'taskId',
-        'Required parameter requestParameters.taskId was null or undefined when calling update.',
+        'Required parameter "taskId" was null or undefined when calling update().',
       );
     }
 
-    if (requestParameters.task === null || requestParameters.task === undefined) {
+    if (requestParameters['task'] == null) {
       throw new runtime.RequiredError(
         'task',
-        'Required parameter requestParameters.task was null or undefined when calling update.',
+        'Required parameter "task" was null or undefined when calling update().',
       );
     }
 
@@ -459,12 +459,12 @@ export class TaskApi extends runtime.BaseAPI {
       {
         path: `/tasks/{task_id}`.replace(
           `{${'task_id'}}`,
-          encodeURIComponent(String(requestParameters.taskId)),
+          encodeURIComponent(String(requestParameters['taskId'])),
         ),
         method: 'PUT',
         headers: headerParameters,
         query: queryParameters,
-        body: TaskToJSON(requestParameters.task),
+        body: TaskToJSON(requestParameters['task']),
       },
       initOverrides,
     );
